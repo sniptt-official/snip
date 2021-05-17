@@ -127,7 +127,7 @@ $ npm install -g sniptt
 $ sniptt COMMAND
 running command...
 $ sniptt (-v|--version|version)
-sniptt/0.0.22 darwin-x64 node-v14.15.4
+sniptt/0.0.23 darwin-x64 node-v14.15.4
 $ sniptt --help [COMMAND]
 USAGE
   $ sniptt COMMAND
@@ -163,7 +163,7 @@ EXAMPLES
   $ snippt add "super secret" --name "satoshi" --workspace "devs"
 ```
 
-_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.22/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.23/src/commands/add.ts)_
 
 ## `sniptt configure`
 
@@ -195,7 +195,7 @@ EXAMPLES
   $ snip configure --email "alice@example.com" --curve "brainpoolP256r1" --profile "personal"
 ```
 
-_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.22/src/commands/configure.ts)_
+_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.23/src/commands/configure.ts)_
 
 ## `sniptt get [NAME]`
 
@@ -216,7 +216,7 @@ EXAMPLES
   $ snip get "satoshi" --workspace "devs"
 ```
 
-_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.22/src/commands/get.ts)_
+_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.23/src/commands/get.ts)_
 
 ## `sniptt help [COMMAND]`
 
@@ -254,7 +254,7 @@ EXAMPLE
   $ snip workspace:add-member -e "bob@example.com" -w "devs"
 ```
 
-_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.22/src/commands/workspace/addMember.ts)_
+_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.23/src/commands/workspace/addMember.ts)_
 
 ## `sniptt workspace:create [NAME]`
 
@@ -285,5 +285,5 @@ EXAMPLES
   $ snip workspace:create "devs"
 ```
 
-_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.22/src/commands/workspace/create.ts)_
+_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.23/src/commands/workspace/create.ts)_
 <!-- commandsstop -->
