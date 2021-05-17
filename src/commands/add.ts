@@ -148,7 +148,7 @@ Secret ${chalk.bold.cyan(`${name} <${id}>`)} added! 🚀
 
 To view this snip later, use the following:
 
-    ${chalk.bold(`$ snip get "satoshi"${workspaceName ? ` --workspace ${workspaceName}` : ''}`)}
+    ${chalk.bold(`$ snip get "${name}"${workspaceName ? ` --workspace ${workspaceName}` : ''}`)}
 `))
 
     // Exit cleanly.
