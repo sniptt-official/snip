@@ -56,8 +56,7 @@
     "/lib",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
-    "/src",
-    "/sniptt-logo.png"
+    "/src"
   ],
   "homepage": "https://github.com/sniptt-official/cli",
   "keywords": [

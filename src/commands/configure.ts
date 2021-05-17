@@ -4,14 +4,12 @@ import {cli} from 'cli-ux'
 import {prompt} from 'enquirer'
 import * as openpgp from 'openpgp'
 import * as os from 'os'
-import {promisify} from 'util'
 import * as yup from 'yup'
 import api from '../services/api'
 import ApiError from '../services/api/error'
 import config, {UserConfig} from '../services/config'
 import {constants, generateAccountConfigurationKeys} from '../services/crypto'
 import generateName from '../services/nameGenerator'
-const Image = require('ascii-art-image')
 
 export default class ConfigureCommand extends Command {
   static description = 'Configure Sniptt';
@@ -229,14 +227,7 @@ Let's try adding a new snip:
   }
 
   private async welcomeUser(): Promise<void> {
-    const createImage = promisify(Image.create)
-
-    const welcomeAsciiText = await createImage({
-      filepath: 'sniptt-logo.png',
-      width: 40,
-      lineart: true,
-    })
-
+    const welcomeAsciiText = Buffer.from('ICAgICAgICAgICAgICAgIOKWhOKWhCAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIOKWgOKWgCAgICAgICAgICAgIOKWn+KWiCAgIOKWl+KWiOKWjCAgCiDiloTilp/ilpviloDilowg4paI4paI4paZ4paf4paI4paI4paEICDilojiloggIOKWnuKWiOKWmeKWhOKWiOKWiOKWhOKWluKWneKWiOKWiOKWiOKWgOKWmOKWnOKWiOKWiOKWm+KWgCAKIOKWgOKWiOKWiOKWmeKWhCDilojilojilpsgIOKWiOKWiOKWjCDilojiloggIOKWnuKWiOKWiCAg4pae4paI4paIIOKWnuKWiOKWiCAgIOKWiOKWiOKWjCAgCiDilpfiloTiloTilojilpsg4paI4paI4paMICDilojilojilowg4pac4paI4paI4paM4pae4paI4paI4pac4paI4paI4pab4paYIOKWneKWiOKWiOKWiOKWjCDilpzilojilojilpkgCiAgICAgICAgICAgICAgICAgICAg4pae4paI4pabICAgICAgICAgICAgICAgICA=', 'base64')
     this.log('\n' + welcomeAsciiText + '\n')
   }
 
