@@ -158,7 +158,7 @@ Let's get started! 🚀
 
     // Artificially wait 5 seconds to ensure the API key is active,
     // otherwise the `configureAccount` call may fail with a 403.
-    await cli.wait(2_500)
+    await cli.wait(5_000)
 
     await api.configureAccount({
       AccountName: name,
@@ -215,7 +215,7 @@ Let's get started! 🚀
 
   private goodbye(): never {
     this.log(chalk.reset(`
-Configuration written to ${chalk.yellow(this.config.configDir)}.
+Configuration written to ${chalk.cyan(this.config.configDir)}.
 
 Let's try adding a new snip:
 
@@ -232,11 +232,11 @@ Let's try adding a new snip:
   }
 
   private userConfigFound(profile: string): never {
-    this.log(`${chalk.reset(`The profile ${chalk.bold.magenta(profile)} is already configured! 👌`)}
+    this.log(`${chalk.reset(`The profile ${chalk.bold.cyan(profile)} is already configured! 👌`)}
 
 If you would like to configure a new profile, run the following:
 
-    ${chalk.bold(`$ snip configure --profile ${chalk.magenta('new_profile_name')}`)}
+    ${chalk.bold(`$ snip configure --profile ${chalk.cyan('new_profile_name')}`)}
 `)
 
     // Exit cleanly.

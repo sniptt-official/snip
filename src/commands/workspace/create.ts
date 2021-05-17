@@ -95,7 +95,7 @@ export default class AddSnipCommand extends Command {
 
   private goodbye({workspacename, id}: { workspacename: string; id: string }): never {
     this.log(chalk.reset(`
-Workspace ${chalk.bold.yellow(`${workspacename} <${id}>`)} created! 🚀
+Workspace ${chalk.bold.cyan(`${workspacename} <${id}>`)} created! 🚀
 
 Let's try adding a new snip:
 

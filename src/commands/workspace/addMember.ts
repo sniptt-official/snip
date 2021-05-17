@@ -170,7 +170,7 @@ export default class AddMemberToWorkspaceCommand extends Command {
 
   private goodbye({email, workspaceName}: { email: string; workspaceName: string }): never {
     this.log(chalk.reset(`
-Member ${chalk.bold.yellow(email)} added to ${chalk.bold.yellow(workspaceName)}! 🚀
+Member ${chalk.bold.cyan(email)} added to ${chalk.bold.cyan(workspaceName)}! 🚀
 `))
 
     // Exit cleanly.
@@ -204,7 +204,7 @@ Member ${chalk.bold.yellow(email)} added to ${chalk.bold.yellow(workspaceName)}!
     const {workspaceName} = await prompt<{ workspaceName: string }>({
       type: 'input',
       name: 'workspaceName',
-      message: chalk.bold(`What's the name of the workspace you'd like to add ${chalk.magenta(email)} to?`),
+      message: chalk.bold(`What's the name of the workspace you'd like to add ${chalk.cyan(email)} to?`),
       required: true,
       initial: generateName(),
       validate: async value => {
@@ -224,7 +224,7 @@ Member ${chalk.bold.yellow(email)} added to ${chalk.bold.yellow(workspaceName)}!
     const {workspaceId} = await prompt<{ workspaceId: string }>({
       type: 'select',
       name: 'workspaceId',
-      message: chalk.bold(`You belong to multiple workspaces with the name ${chalk.magenta(workspaceName)}. Which one did you mean?`),
+      message: chalk.bold(`You belong to multiple workspaces with the name ${chalk.cyan(workspaceName)}. Which one did you mean?`),
       choices: workspaceMemberships.map(workspaceMembership => ({
         name: workspaceMembership.WorkspaceId,
         message: `${workspaceMembership.WorkspaceName} (${workspaceMembership.Role})`,

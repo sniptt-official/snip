@@ -141,7 +141,7 @@ export default class GetSnipCommand extends Command {
 
   private goodbye({secretName, secretValue, workspaceName = 'personal'}: { secretName: string; secretValue: string; workspaceName?: string }): never {
     this.log(chalk.reset(`
-🔒 Successfully decrypted secret, ${chalk.bold.yellow(secretName)}, from workspace, ${chalk.bold.yellow(workspaceName)}:
+🔒 Successfully decrypted secret, ${chalk.bold.cyan(secretName)}, from workspace, ${chalk.bold.cyan(workspaceName)}:
 
     ${chalk.bold.cyan(secretValue)}
 `))
@@ -175,7 +175,7 @@ export default class GetSnipCommand extends Command {
     const {workspaceId} = await prompt<{ workspaceId: string }>({
       type: 'select',
       name: 'workspaceId',
-      message: chalk.bold(`You belong to multiple workspaces with the name ${chalk.magenta(workspaceName)}. Which one did you mean?`),
+      message: chalk.bold(`You belong to multiple workspaces with the name ${chalk.cyan(workspaceName)}. Which one did you mean?`),
       choices: workspaceMemberships.map(workspaceMembership => ({
         name: workspaceMembership.WorkspaceId,
         message: `${workspaceMembership.WorkspaceName} (${workspaceMembership.Role})`,

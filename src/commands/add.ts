@@ -144,7 +144,7 @@ export default class AddSnipCommand extends Command {
 
   private goodbye({name, id, workspaceName}: { name: string; id: string; workspaceName?: string }): never {
     this.log(chalk.reset(`
-Secret ${chalk.bold.magenta(`${name} <${id}>`)} added! 🚀
+Secret ${chalk.bold.cyan(`${name} <${id}>`)} added! 🚀
 
 To view this snip later, use the following:
 
@@ -202,7 +202,7 @@ To view this snip later, use the following:
     const {workspaceId} = await prompt<{ workspaceId: string }>({
       type: 'select',
       name: 'workspaceId',
-      message: chalk.bold(`You belong to multiple workspaces with the name ${chalk.magenta(workspaceName)}. Which one did you mean?`),
+      message: chalk.bold(`You belong to multiple workspaces with the name ${chalk.cyan(workspaceName)}. Which one did you mean?`),
       choices: workspaceMemberships.map(workspaceMembership => ({
         name: `${workspaceMembership.WorkspaceName} (${workspaceMembership.Role})`,
         value: workspaceMembership.WorkspaceId,
