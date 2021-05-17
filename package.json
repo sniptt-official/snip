@@ -1,7 +1,7 @@
 {
   "name": "sniptt",
   "description": "Secure content management with end-to-end encryption",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "author": "sniptt.com <support+npm@sniptt.com> (https://github.com/sniptt-official)",
   "bin": {
     "sniptt": "./bin/run",
