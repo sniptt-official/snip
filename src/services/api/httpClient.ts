@@ -4,7 +4,7 @@ import {object, string} from 'yup'
 import ApiError from './error'
 import {ErrorCode} from './types'
 
-const {BASE_URI = 'api.beta.snipt.io'} = process.env
+const {BASE_URI = 'api.sniptt.com'} = process.env
 
 const ErrorSchema = object({
   ErrorMessage: string().required(),
