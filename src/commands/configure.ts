@@ -27,6 +27,7 @@ export default class ConfigureCommand extends Command {
       char: 'c',
       description: 'ecc curve name used to generate account keys',
       options: constants.ECC_CURVES,
+      default: 'curve25519',
     }),
     passphrase: flags.string({
       char: 'p',
@@ -49,8 +50,8 @@ export default class ConfigureCommand extends Command {
     await this.welcomeUser()
 
     // Parse the command.
-    const {flags: {profile, ...mutableFlags}} = this.parse(ConfigureCommand)
-    let {email, name, passphrase, curve} = mutableFlags
+    const {flags: {profile, curve, ...mutableFlags}} = this.parse(ConfigureCommand)
+    let {email, name, passphrase} = mutableFlags
 
     // If user config is already present for given profile, return a friendly message.
     const existingUserConfig = await config.read(this.config.configDir, profile)
@@ -139,9 +140,9 @@ Let's get started! 🚀
       await this.promptForConfirmPassphrase({passphrase})
     }
 
-    if (!curve) {
-      curve = await this.promptForCurve()
-    }
+    // if (!curve) {
+    //   curve = await this.promptForCurve()
+    // }
 
     // Generate account/workspace keys.
     cli.action.start(chalk.green('Generating account keys'))
@@ -311,7 +312,7 @@ If you would like to configure a new profile, run the following:
     const accountPassphraseSchema = yup.string().min(12).max(256).required()
 
     const {accountPassphrase} = await prompt<{ accountPassphrase: string }>({
-      type: 'password',
+      type: 'invisible',
       name: 'accountPassphrase',
       message: chalk.bold(`What passphrase would you like to use to encrypt your master key? ${chalk.cyan('(12 characters or more)')}`),
       required: true,
@@ -330,7 +331,7 @@ If you would like to configure a new profile, run the following:
 
   private async promptForConfirmPassphrase({passphrase}: { passphrase: string }): Promise<string> {
     const {confirmAccountPassphrase} = await prompt<{ confirmAccountPassphrase: string }>({
-      type: 'password',
+      type: 'invisible',
       name: 'confirmAccountPassphrase',
       message: chalk.bold('Please confirm passphrase'),
       required: true,
@@ -346,19 +347,19 @@ If you would like to configure a new profile, run the following:
     return confirmAccountPassphrase
   }
 
-  private async promptForCurve(): Promise<openpgp.EllipticCurveName> {
-    const {curve} = await prompt<{ curve: openpgp.EllipticCurveName }>({
-      type: 'select',
-      name: 'curve',
-      message: chalk.bold('Which ECC curve would you like to use to generate your account keys?'),
-      initial: 0,
-      choices: constants.ECC_CURVES.map(curve => ({
-        name: curve,
-        hint: curve === 'curve25519' ? 'recommended' : undefined,
-      })),
-      required: true,
-    })
+  // private async promptForCurve(): Promise<openpgp.EllipticCurveName> {
+  //   const { curve } = await prompt<{ curve: openpgp.EllipticCurveName }>({
+  //     type: 'select',
+  //     name: 'curve',
+  //     message: chalk.bold('Which ECC curve would you like to use to generate your account keys?'),
+  //     initial: 0,
+  //     choices: constants.ECC_CURVES.map(curve => ({
+  //       name: curve,
+  //       hint: curve === 'curve25519' ? 'recommended' : undefined,
+  //     })),
+  //     required: true,
+  //   })
 
-    return curve
-  }
+  //   return curve
+  // }
 }

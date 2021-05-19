@@ -81,7 +81,14 @@ export default class GetSnipCommand extends Command {
     }
 
     // 4. Decrypt workspace private key.
-    cli.action.start(chalk.green('Decrypting account keys'))
+    cli.action.start(chalk.green('Decrypting keys'))
+    const {SecretEncryptedContent, WorkspaceEncryptedPrivateKey} = await api.getSecret({
+      WorkspaceId: workspaceId,
+      SecretName: name,
+    }, {
+      ApiKey: userConfig.Device.ApiKey,
+    })
+
     const {encryptionKey} = deriveEncryptionKey({
       passphrase,
       salt: Buffer.from(userConfig.Account.EncryptionKeySalt, 'base64'),
@@ -92,21 +99,11 @@ export default class GetSnipCommand extends Command {
       passwords: [encryptionKey],
     })
 
-    const {data: personalWorkspacePrivateKey} = await decrypt({
-      message: await readMessage({armoredMessage: userConfig.PersonalWorkspace.EncryptedPrivateKey}),
+    const {data: workspacePrivateKey} = await decrypt({
+      message: await readMessage({armoredMessage: WorkspaceEncryptedPrivateKey}),
       privateKeys: [
         await readKey({armoredKey: accountPrivateKey}),
       ],
-    })
-    cli.action.stop('✅')
-
-    // 5. Fetch encrypted secret.
-    cli.action.start(chalk.green('Getting encrypted secret from workspace'))
-    const {SecretEncryptedContent} = await api.getSecret({
-      WorkspaceId: workspaceId,
-      SecretName: name,
-    }, {
-      ApiKey: userConfig.Device.ApiKey,
     })
     cli.action.stop('✅')
 
@@ -117,7 +114,7 @@ export default class GetSnipCommand extends Command {
         armoredMessage: SecretEncryptedContent,
       }),
       privateKeys: [
-        await readKey({armoredKey: personalWorkspacePrivateKey}),
+        await readKey({armoredKey: workspacePrivateKey}),
       ],
     })
     cli.action.stop('✅')

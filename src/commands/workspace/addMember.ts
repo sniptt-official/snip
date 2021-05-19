@@ -241,7 +241,7 @@ Member ${chalk.bold.cyan(email)} added to ${chalk.bold.cyan(workspaceName)}! ðŸš
     const accountPassphraseSchema = yup.string().min(12).max(256).required()
 
     const {accountPassphrase} = await prompt<{ accountPassphrase: string }>({
-      type: 'password',
+      type: 'invisible',
       name: 'accountPassphrase',
       message: chalk.bold('Please enter your account master passphrase'),
       required: true,

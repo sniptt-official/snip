@@ -20,6 +20,7 @@ export default class AddSnipCommand extends Command {
       char: 'c',
       description: 'ecc curve name used to generate workspace keys',
       options: constants.ECC_CURVES,
+      default: 'curve25519',
     }),
     profile: flags.string({
       description: 'account profile to use',
@@ -35,9 +36,8 @@ export default class AddSnipCommand extends Command {
   static args = [{name: 'name', type: 'string'}];
 
   async run() {
-    const {args, flags: {profile, ...mutableFlags}} = this.parse(AddSnipCommand)
+    const {args, flags: {profile, curve}} = this.parse(AddSnipCommand)
     let {name} = args
-    let {curve} = mutableFlags
 
     const userConfig = await config.read(this.config.configDir, profile)
 
@@ -51,9 +51,9 @@ export default class AddSnipCommand extends Command {
     }
 
     // 2. Prompt for curve if flag not set.
-    if (!curve) {
-      curve = await this.promptForCurve()
-    }
+    // if (!curve) {
+    //   curve = await this.promptForCurve()
+    // }
 
     // 3. Generate workspace keys.
     cli.action.start(chalk.green('Generating workspace keys'))
@@ -128,19 +128,19 @@ Let's try adding a new snip:
     return workspaceName
   }
 
-  private async promptForCurve(): Promise<openpgp.EllipticCurveName> {
-    const {curve} = await prompt<{ curve: openpgp.EllipticCurveName }>({
-      type: 'select',
-      name: 'curve',
-      message: chalk.bold('Which ECC curve would you like to use to generate your account keys?'),
-      initial: 0,
-      choices: constants.ECC_CURVES.map(curve => ({
-        name: curve,
-        hint: curve === 'curve25519' ? 'recommended' : undefined,
-      })),
-      required: true,
-    })
+  // private async promptForCurve(): Promise<openpgp.EllipticCurveName> {
+  //   const {curve} = await prompt<{ curve: openpgp.EllipticCurveName }>({
+  //     type: 'select',
+  //     name: 'curve',
+  //     message: chalk.bold('Which ECC curve would you like to use to generate your account keys?'),
+  //     initial: 0,
+  //     choices: constants.ECC_CURVES.map(curve => ({
+  //       name: curve,
+  //       hint: curve === 'curve25519' ? 'recommended' : undefined,
+  //     })),
+  //     required: true,
+  //   })
 
-    return curve
-  }
+  //   return curve
+  // }
 }

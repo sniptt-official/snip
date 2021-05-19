@@ -2,6 +2,7 @@ import {Command, flags} from '@oclif/command'
 import * as chalk from 'chalk'
 import {cli} from 'cli-ux'
 import {prompt} from 'enquirer'
+import {readFileSync} from 'fs'
 import {decrypt, encrypt, Message, readKey, readMessage} from 'openpgp'
 import * as yup from 'yup'
 import api from '../services/api'
@@ -15,11 +16,19 @@ export default class AddSnipCommand extends Command {
 
   static flags = {
     help: flags.help({char: 'h'}),
-    name: flags.string({char: 'n', description: 'secret name'}),
     passphrase: flags.string({
       char: 'p',
       description: 'master passphrase used to protect your account key',
     }),
+    file: flags.string({
+      char: 'f',
+      description: 'file to use as input',
+    }),
+    // encoding: flags.enum<BufferEncoding>({
+    //   char: 'e',
+    //   description: 'parse value or file with specified encoding',
+    //   options: ['ascii', 'utf8', 'utf16le', 'ucs2', 'base64', 'latin1', 'binary', 'hex'],
+    // }),
     profile: flags.string({
       description: 'account profile to use',
       default: 'default',
@@ -31,15 +40,18 @@ export default class AddSnipCommand extends Command {
   };
 
   static examples = [
-    '$ snippt add "super secret" --name "satoshi"',
-    '$ snippt add "super secret" --name "satoshi" --workspace "devs"',
+    '$ snip add DB_PASSWORD AYYGR3h64tHp9Bne',
+    '$ snip add "local dev env" --file .env.local --workspace devs',
+    '$ snip add --file .env.prod --workspace phoenix:automation',
   ];
 
-  static args = [{name: 'value'}];
+  static args = [{name: 'name'}, {name: 'value'}];
 
   async run() {
-    const {args: {value}, flags: {profile, workspace: workspaceName, ...mutableFlags}} = this.parse(AddSnipCommand)
-    let {name, passphrase} = mutableFlags
+    const {args, flags: {profile, workspace: workspaceName, file, ...mutableFlags}} = this.parse(AddSnipCommand)
+    let {passphrase} = mutableFlags
+    let {name, value} = args
+    let inputType: 'value' | 'file'
 
     const userConfig = await config.read(this.config.configDir, profile)
 
@@ -47,14 +59,33 @@ export default class AddSnipCommand extends Command {
       throw new Error('missing user configuration')
     }
 
-    // NOTE: For now only support string values.
-    // TODO: In future, we should support files (in any format).
-    if (typeof value !== 'string') {
-      throw new TypeError('secret value must be a string')
-    }
-
     if (!name) {
       name = await this.promptForSecretName()
+    }
+
+    if (typeof value === 'string') {
+      if (typeof file === 'string') {
+        throw new TypeError('cannot provide both value and filename as input, please choose one')
+      }
+
+      inputType = 'value'
+      value = Buffer.from(value)
+    } else if (typeof file === 'string') {
+      inputType = 'file'
+      // TODO: Perform presence and size check here to avoid
+      // reading file into memory for no reason.
+      value = readFileSync(file)
+    } else {
+      inputType = await this.promptForInputType()
+    }
+
+    if (!(value instanceof Buffer)) {
+      value = inputType === 'value' ?
+        await this.promptForInputValue() : await this.promptForInputFilename()
+    }
+
+    if (value.length > 10_000) {
+      throw new Error('size of input cannot exceed 10kB')
     }
 
     if (!passphrase) {
@@ -83,7 +114,13 @@ export default class AddSnipCommand extends Command {
       }
     }
 
-    cli.action.start(chalk.green('Decrypting account keys'))
+    cli.action.start(chalk.green('Decrypting keys'))
+    const {WorkspacePublicKey, WorkspaceEncryptedPrivateKey} = await api.getWorkspace({
+      WorkspaceId: workspaceId,
+    }, {
+      ApiKey: userConfig.Device.ApiKey,
+    })
+
     const {encryptionKey} = deriveEncryptionKey({
       passphrase,
       salt: Buffer.from(userConfig.Account.EncryptionKeySalt, 'base64'),
@@ -94,8 +131,8 @@ export default class AddSnipCommand extends Command {
       passwords: [encryptionKey],
     })
 
-    const {data: personalWorkspacePrivateKey} = await decrypt({
-      message: await readMessage({armoredMessage: userConfig.PersonalWorkspace.EncryptedPrivateKey}),
+    const {data: workspacePrivateKey} = await decrypt({
+      message: await readMessage({armoredMessage: WorkspaceEncryptedPrivateKey}),
       privateKeys: [
         await readKey({armoredKey: accountPrivateKey}),
       ],
@@ -104,14 +141,14 @@ export default class AddSnipCommand extends Command {
 
     cli.action.start(chalk.green('Encrypting secret'))
     const message = await encrypt({
-      message: Message.fromText(value),
+      message: Message.fromBinary(value),
       publicKeys: [
-        await readKey({armoredKey: userConfig.PersonalWorkspace.PublicKey}),
+        await readKey({armoredKey: WorkspacePublicKey}),
       ],
       // NOTE: Below only used for embedding a signature.
       // Can be used later to verify the signature(s).
       privateKeys: [
-        await readKey({armoredKey: personalWorkspacePrivateKey}),
+        await readKey({armoredKey: workspacePrivateKey}),
       ],
     })
     cli.action.stop('✅')
@@ -177,11 +214,47 @@ To view this snip later, use the following:
     return secretName
   }
 
+  private async promptForInputType(): Promise<'value' | 'file'> {
+    const {inputType} = await prompt<{ inputType: 'value' | 'file' }>({
+      type: 'select',
+      name: 'inputType',
+      message: chalk.bold('What type of input would you like to use?'),
+      choices: ['value', 'file'],
+      required: true,
+    })
+
+    return inputType
+  }
+
+  private async promptForInputValue(): Promise<Buffer> {
+    const {inputValue} = await prompt<{ inputValue: string }>({
+      type: 'invisible',
+      name: 'inputValue',
+      message: chalk.bold(`What is the secret you'd like to encrypt? ${chalk.cyan('(input will be hidden)')}`),
+      required: true,
+    })
+
+    return Buffer.from(inputValue)
+  }
+
+  private async promptForInputFilename(): Promise<Buffer> {
+    const {inputFilename} = await prompt<{ inputFilename: string }>({
+      type: 'input',
+      name: 'inputFilename',
+      message: chalk.bold('What is the path of the file you\'d like to encrypt?'),
+      required: true,
+    })
+
+    // TODO: Perform presence and size check here to avoid
+    // reading file into memory for no reason.
+    return readFileSync(inputFilename)
+  }
+
   private async promptForPassphrase(): Promise<string> {
     const accountPassphraseSchema = yup.string().min(12).max(256).required()
 
     const {accountPassphrase} = await prompt<{ accountPassphrase: string }>({
-      type: 'password',
+      type: 'invisible',
       name: 'accountPassphrase',
       message: chalk.bold('Please enter your account master passphrase'),
       required: true,
