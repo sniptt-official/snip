@@ -127,7 +127,7 @@ $ npm install -g sniptt
 $ sniptt COMMAND
 running command...
 $ sniptt (-v|--version|version)
-sniptt/0.0.24 darwin-x64 node-v14.15.4
+sniptt/0.0.25 darwin-x64 node-v14.15.4
 $ sniptt --help [COMMAND]
 USAGE
   $ sniptt COMMAND
@@ -136,34 +136,36 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`sniptt add [VALUE]`](#sniptt-add-value)
+* [`sniptt add [NAME] [VALUE]`](#sniptt-add-name-value)
 * [`sniptt configure`](#sniptt-configure)
 * [`sniptt get [NAME]`](#sniptt-get-name)
 * [`sniptt help [COMMAND]`](#sniptt-help-command)
+* [`sniptt ls`](#sniptt-ls)
 * [`sniptt workspace:addMember`](#sniptt-workspaceaddmember)
 * [`sniptt workspace:create [NAME]`](#sniptt-workspacecreate-name)
 
-## `sniptt add [VALUE]`
+## `sniptt add [NAME] [VALUE]`
 
 Add encrypted Snip to a workspace
 
 ```
 USAGE
-  $ sniptt add [VALUE]
+  $ sniptt add [NAME] [VALUE]
 
 OPTIONS
+  -f, --file=file              file to use as input
   -h, --help                   show CLI help
-  -n, --name=name              secret name
   -p, --passphrase=passphrase  master passphrase used to protect your account key
   -w, --workspace=workspace    name of workspace to store secret
   --profile=profile            [default: default] account profile to use
 
 EXAMPLES
-  $ snippt add "super secret" --name "satoshi"
-  $ snippt add "super secret" --name "satoshi" --workspace "devs"
+  $ snip add DB_PASSWORD AYYGR3h64tHp9Bne
+  $ snip add "local dev env" --file .env.local --workspace devs
+  $ snip add --file .env.prod --workspace phoenix:automation
 ```
 
-_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.24/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/add.ts)_
 
 ## `sniptt configure`
 
@@ -175,7 +177,7 @@ USAGE
 
 OPTIONS
   -c, --curve=(curve25519|ed25519|p256|p384|p521|brainpoolP256r1|brainpoolP384r1|brainpoolP512r1|secp256k1)
-      ecc curve name used to generate account keys
+      [default: curve25519] ecc curve name used to generate account keys
 
   -e, --email=email
       email associated with the account
@@ -195,7 +197,7 @@ EXAMPLES
   $ snip configure --email "alice@example.com" --curve "brainpoolP256r1" --profile "personal"
 ```
 
-_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.24/src/commands/configure.ts)_
+_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/configure.ts)_
 
 ## `sniptt get [NAME]`
 
@@ -216,7 +218,7 @@ EXAMPLES
   $ snip get "satoshi" --workspace "devs"
 ```
 
-_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.24/src/commands/get.ts)_
+_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/get.ts)_
 
 ## `sniptt help [COMMAND]`
 
@@ -234,6 +236,34 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+
+## `sniptt ls`
+
+List secrets in a workspace
+
+```
+USAGE
+  $ sniptt ls
+
+OPTIONS
+  -h, --help                 show CLI help
+  -w, --workspace=workspace  workspace name
+  -x, --extended             show extra columns
+  --columns=columns          only show provided columns (comma-separated)
+  --csv                      output is csv format [alias: --output=csv]
+  --filter=filter            filter property by partial string matching, ex: name=foo
+  --no-header                hide table header from output
+  --no-truncate              do not truncate output to fit screen
+  --output=csv|json|yaml     output in a more machine friendly format
+  --profile=profile          [default: default] account profile to use
+  --sort=sort                property to sort by (prepend '-' for descending)
+
+EXAMPLES
+  $ snip ls
+  $ snip ls --workspace devs
+```
+
+_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/ls.ts)_
 
 ## `sniptt workspace:addMember`
 
@@ -254,7 +284,7 @@ EXAMPLE
   $ snip workspace:add-member -e "bob@example.com" -w "devs"
 ```
 
-_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.24/src/commands/workspace/addMember.ts)_
+_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/workspace/addMember.ts)_
 
 ## `sniptt workspace:create [NAME]`
 
@@ -265,25 +295,19 @@ USAGE
   $ sniptt workspace:create [NAME]
 
 OPTIONS
-  -c, --curve=(curve25519|ed25519|p256|p384|p521|brainpoolP256r1|brainpoolP384r1|brainpoolP512r1|secp256k1)  ecc curve
-                                                                                                             name used
-                                                                                                             to generate
-                                                                                                             workspace
-                                                                                                             keys
+  -c, --curve=(curve25519|ed25519|p256|p384|p521|brainpoolP256r1|brainpoolP384r1|brainpoolP512r1|secp256k1)
+      [default: curve25519] ecc curve name used to generate workspace keys
 
-  -h, --help                                                                                                 show CLI
-                                                                                                             help
+  -h, --help
+      show CLI help
 
-  --profile=profile                                                                                          [default:
-                                                                                                             default]
-                                                                                                             account
-                                                                                                             profile to
-                                                                                                             use
+  --profile=profile
+      [default: default] account profile to use
 
 EXAMPLES
   $ snip workspace:create
   $ snip workspace:create "devs"
 ```
 
-_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.24/src/commands/workspace/create.ts)_
+_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/workspace/create.ts)_
 <!-- commandsstop -->
