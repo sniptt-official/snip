@@ -127,7 +127,7 @@ $ npm install -g sniptt
 $ sniptt COMMAND
 running command...
 $ sniptt (-v|--version|version)
-sniptt/0.0.25 darwin-x64 node-v14.15.4
+sniptt/0.0.26 darwin-x64 node-v14.15.4
 $ sniptt --help [COMMAND]
 USAGE
   $ sniptt COMMAND
@@ -141,6 +141,7 @@ USAGE
 * [`sniptt get [NAME]`](#sniptt-get-name)
 * [`sniptt help [COMMAND]`](#sniptt-help-command)
 * [`sniptt ls`](#sniptt-ls)
+* [`sniptt share [NAME]`](#sniptt-share-name)
 * [`sniptt workspace:addMember`](#sniptt-workspaceaddmember)
 * [`sniptt workspace:create [NAME]`](#sniptt-workspacecreate-name)
 
@@ -165,7 +166,7 @@ EXAMPLES
   $ snip add --file .env.prod --workspace phoenix:automation
 ```
 
-_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/add.ts)_
 
 ## `sniptt configure`
 
@@ -197,7 +198,7 @@ EXAMPLES
   $ snip configure --email "alice@example.com" --curve "brainpoolP256r1" --profile "personal"
 ```
 
-_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/configure.ts)_
+_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/configure.ts)_
 
 ## `sniptt get [NAME]`
 
@@ -209,16 +210,20 @@ USAGE
 
 OPTIONS
   -h, --help                   show CLI help
+  -o, --out=out                output result to a file
   -p, --passphrase=passphrase  master passphrase used to protect your account key
   -w, --workspace=workspace    workspace name
   --profile=profile            [default: default] account profile to use
+  --stdout                     pipe result directly to stdout, useful for scripting
 
 EXAMPLES
-  $ snip get "satoshi"
-  $ snip get "satoshi" --workspace "devs"
+  $ snip get DB_PASSWORD
+  $ snip get DB_PASSWORD --workspace devs
+  $ snip get "local dev env" --stdout | pbcopy
+  $ snip get .env.prod --workspace phoenix:automation -o .env.prod
 ```
 
-_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/get.ts)_
+_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/get.ts)_
 
 ## `sniptt help [COMMAND]`
 
@@ -263,7 +268,26 @@ EXAMPLES
   $ snip ls --workspace devs
 ```
 
-_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/ls.ts)_
+_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/ls.ts)_
+
+## `sniptt share [NAME]`
+
+Share an encrypted Snip via one-time URL
+
+```
+USAGE
+  $ sniptt share [NAME]
+
+OPTIONS
+  -h, --help                   show CLI help
+  -p, --passphrase=passphrase  master passphrase used to protect your account key
+  --profile=profile            [default: default] account profile to use
+
+EXAMPLE
+  $ snip share DB_PASSWORD
+```
+
+_See code: [src/commands/share.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/share.ts)_
 
 ## `sniptt workspace:addMember`
 
@@ -284,7 +308,7 @@ EXAMPLE
   $ snip workspace:add-member -e "bob@example.com" -w "devs"
 ```
 
-_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/workspace/addMember.ts)_
+_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/workspace/addMember.ts)_
 
 ## `sniptt workspace:create [NAME]`
 
@@ -309,5 +333,5 @@ EXAMPLES
   $ snip workspace:create "devs"
 ```
 
-_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.25/src/commands/workspace/create.ts)_
+_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/workspace/create.ts)_
 <!-- commandsstop -->
