@@ -154,7 +154,7 @@ export default class AddSnipCommand extends Command {
     cli.action.stop('✅')
 
     cli.action.start(chalk.green('Adding secret to workspace'))
-    const response = await api.addSecret({
+    await api.addSecret({
       WorkspaceId: workspaceId,
       SecretName: name,
       SecretEncryptedContent: message as string,
@@ -163,7 +163,7 @@ export default class AddSnipCommand extends Command {
     })
     cli.action.stop('✅')
 
-    this.goodbye({name, id: response.SecretId, workspaceName})
+    this.goodbye({name, workspaceName})
   }
 
   async catch(error: string | ApiError) {
@@ -179,13 +179,17 @@ export default class AddSnipCommand extends Command {
     throw error
   }
 
-  private goodbye({name, id, workspaceName}: { name: string; id: string; workspaceName?: string }): never {
+  private goodbye({name, workspaceName}: { name: string; workspaceName?: string }): never {
     this.log(chalk.reset(`
-Secret ${chalk.bold.cyan(`${name} <${id}>`)} added! 🚀
+✨ ${chalk.bold.cyan(name)} added to ${chalk.bold.cyan(workspaceName ? workspaceName : 'Personal')} workspace!
 
-To view this snip later, use the following:
+To view:
 
     ${chalk.bold(`$ snip get "${name}"${workspaceName ? ` --workspace ${workspaceName}` : ''}`)}
+
+To share:
+
+    ${chalk.bold(`$ snip share "${name}"${workspaceName ? ` --workspace ${workspaceName}` : ''}`)}
 `))
 
     // Exit cleanly.
