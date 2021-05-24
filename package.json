@@ -4,8 +4,8 @@
   "version": "0.0.27",
   "author": "sniptt.com <support+npm@sniptt.com> (https://github.com/sniptt-official)",
   "bin": {
-    "sniptt": "./bin/run",
-    "snip": "./bin/run"
+    "snip": "./bin/run",
+    "sniptt": "./bin/run"
   },
   "bugs": "https://github.com/sniptt-official/cli/issues",
   "dependencies": {
@@ -71,7 +71,7 @@
   "main": "src/index.js",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "sniptt",
+    "bin": "snip",
     "plugins": [
       "@oclif/plugin-help"
     ]
