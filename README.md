@@ -127,7 +127,7 @@ $ npm install -g sniptt
 $ sniptt COMMAND
 running command...
 $ sniptt (-v|--version|version)
-sniptt/0.0.26 darwin-x64 node-v14.15.4
+sniptt/0.0.27 darwin-x64 node-v14.15.4
 $ sniptt --help [COMMAND]
 USAGE
   $ sniptt COMMAND
@@ -142,8 +142,7 @@ USAGE
 * [`sniptt help [COMMAND]`](#sniptt-help-command)
 * [`sniptt ls`](#sniptt-ls)
 * [`sniptt share [NAME]`](#sniptt-share-name)
-* [`sniptt workspace:addMember`](#sniptt-workspaceaddmember)
-* [`sniptt workspace:create [NAME]`](#sniptt-workspacecreate-name)
+* [`sniptt workspace ACTION [NAME]`](#sniptt-workspace-action-name)
 
 ## `sniptt add [NAME] [VALUE]`
 
@@ -166,7 +165,7 @@ EXAMPLES
   $ snip add --file .env.prod --workspace phoenix:automation
 ```
 
-_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/add.ts)_
 
 ## `sniptt configure`
 
@@ -198,7 +197,7 @@ EXAMPLES
   $ snip configure --email "alice@example.com" --curve "brainpoolP256r1" --profile "personal"
 ```
 
-_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/configure.ts)_
+_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/configure.ts)_
 
 ## `sniptt get [NAME]`
 
@@ -223,7 +222,7 @@ EXAMPLES
   $ snip get .env.prod --workspace phoenix:automation -o .env.prod
 ```
 
-_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/get.ts)_
+_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/get.ts)_
 
 ## `sniptt help [COMMAND]`
 
@@ -268,7 +267,7 @@ EXAMPLES
   $ snip ls --workspace devs
 ```
 
-_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/ls.ts)_
+_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/ls.ts)_
 
 ## `sniptt share [NAME]`
 
@@ -287,51 +286,37 @@ EXAMPLE
   $ snip share DB_PASSWORD
 ```
 
-_See code: [src/commands/share.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/share.ts)_
+_See code: [src/commands/share.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/share.ts)_
 
-## `sniptt workspace:addMember`
+## `sniptt workspace ACTION [NAME]`
 
-Add member to Sniptt workspace
-
-```
-USAGE
-  $ sniptt workspace:addMember
-
-OPTIONS
-  -e, --email=email            email of account to invite
-  -h, --help                   show CLI help
-  -p, --passphrase=passphrase  master passphrase used to protect your account key
-  -w, --workspace=workspace    workspace name
-  --profile=profile            [default: default] account profile to use
-
-EXAMPLE
-  $ snip workspace:add-member -e "bob@example.com" -w "devs"
-```
-
-_See code: [src/commands/workspace/addMember.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/workspace/addMember.ts)_
-
-## `sniptt workspace:create [NAME]`
-
-Create new Sniptt workspace
+Manage workspaces
 
 ```
 USAGE
-  $ sniptt workspace:create [NAME]
+  $ sniptt workspace ACTION [NAME]
 
 OPTIONS
   -c, --curve=(curve25519|ed25519|p256|p384|p521|brainpoolP256r1|brainpoolP384r1|brainpoolP512r1|secp256k1)
       [default: curve25519] ecc curve name used to generate workspace keys
 
+  -e, --email=email
+      email of account to invite
+
   -h, --help
       show CLI help
+
+  -p, --passphrase=passphrase
+      master passphrase used to protect your account key
 
   --profile=profile
       [default: default] account profile to use
 
 EXAMPLES
-  $ snip workspace:create
-  $ snip workspace:create "devs"
+  $ snip workspace create
+  $ snip workspace create devs
+  $ snip workspace add-member devs -e bob@example.com
 ```
 
-_See code: [src/commands/workspace/create.ts](https://github.com/sniptt-official/cli/blob/v0.0.26/src/commands/workspace/create.ts)_
+_See code: [src/commands/workspace.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/workspace.ts)_
 <!-- commandsstop -->
