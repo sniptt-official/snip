@@ -2,26 +2,31 @@ import {Command, flags} from '@oclif/command'
 import * as chalk from 'chalk'
 import {cli} from 'cli-ux'
 import {prompt} from 'enquirer'
-import {decrypt, encrypt, Message, readKey, readMessage} from 'openpgp'
+import {decrypt, readMessage, readKey, encrypt, Message, EllipticCurveName} from 'openpgp'
 import * as yup from 'yup'
-import api from '../../services/api'
-import ApiError from '../../services/api/error'
-import config from '../../services/config'
-import deriveEncryptionKey from '../../services/crypto/deriveEncryptionKey'
-import generateName from '../../services/nameGenerator'
+import api from '../services/api'
+import ApiError from '../services/api/error'
+import config from '../services/config'
+import {constants} from '../services/crypto'
+import generateWorkspaceKeys from '../services/crypto/generateWorkspaceKeys'
+import deriveEncryptionKey from '../services/crypto/deriveEncryptionKey'
+import generateName from '../services/nameGenerator'
+import {UserConfig} from '../services/config'
 
-export default class AddMemberToWorkspaceCommand extends Command {
-  static description = 'Add member to Sniptt workspace';
+export default class WorkspaceSnipCommand extends Command {
+  static description = 'Manage workspaces';
 
   static flags = {
     help: flags.help({char: 'h'}),
+    curve: flags.enum<EllipticCurveName>({
+      char: 'c',
+      description: 'ecc curve name used to generate workspace keys',
+      options: constants.ECC_CURVES,
+      default: 'curve25519',
+    }),
     email: flags.string({
       char: 'e',
       description: 'email of account to invite',
-    }),
-    workspace: flags.string({
-      char: 'w',
-      description: 'workspace name',
     }),
     passphrase: flags.string({
       char: 'p',
@@ -33,11 +38,18 @@ export default class AddMemberToWorkspaceCommand extends Command {
     }),
   };
 
-  static examples = ['$ snip workspace:add-member -e "bob@example.com" -w "devs"'];
+  static examples = [
+    '$ snip workspace create',
+    '$ snip workspace create devs',
+    '$ snip workspace add-member devs -e bob@example.com',
+  ];
+
+  static args = [{name: 'action', type: 'string', required: true, options: ['create', 'add-member']}, {name: 'name', type: 'string'}];
 
   async run() {
-    const {flags: {profile, ...mutableFlags}} = this.parse(AddMemberToWorkspaceCommand)
-    let {workspace: workspaceName, email, passphrase} = mutableFlags
+    const {args: {action, ...mutableArgs}, flags: {profile, curve, ...mutableFlags}} = this.parse(WorkspaceSnipCommand)
+    let {name: workspaceName} = mutableArgs
+    let {email, passphrase} = mutableFlags
 
     const userConfig = await config.read(this.config.configDir, profile)
 
@@ -45,42 +57,106 @@ export default class AddMemberToWorkspaceCommand extends Command {
       throw new Error('missing user configuration')
     }
 
-    // 1. Prompt for email of account to invite if no flags sent.
-    if (!email) {
-      email = await this.promptForEmail()
-    }
-
-    // 2. Prompt for workspace name if no flags sent.
+    // 1. Prompt for workspace name if no arguments sent.
     if (!workspaceName) {
-      workspaceName = await this.promptForWorkspaceName({email})
+      workspaceName = await this.promptForWorkspaceName(action)
     }
 
-    // 3. Determine which workspace ID should be used.
-    let workspaceId = userConfig.PersonalWorkspace.Id
+    if (action === 'create') {
+      await this.createWorkpace({
+        userConfig,
+        workspaceName,
+        curve,
+      })
+    }
 
-    const workspaceMemberships = await api.searchWorkspaceMemberships({
+    if (action === 'add-member') {
+      if (!email) {
+        email = await this.promptForEmail()
+      }
+
+      // 3. Determine which workspace ID should be used.
+      let workspaceId = userConfig.PersonalWorkspace.Id
+
+      const workspaceMemberships = await api.searchWorkspaceMemberships({
+        WorkspaceName: workspaceName,
+      }, {
+        ApiKey: userConfig.Device.ApiKey,
+      })
+
+      if (workspaceMemberships.length === 0) {
+        throw new Error('workspace not found')
+      }
+
+      if (workspaceMemberships.length === 1) {
+        workspaceId = workspaceMemberships[0]?.WorkspaceId!
+      }
+
+      if (workspaceMemberships.length > 1) {
+        workspaceId = await this.promptForWorkspaceId(workspaceName, workspaceMemberships)
+      }
+
+      // 4. Prompt for account key master passphrase if no flags sent.
+      if (!passphrase) {
+        passphrase = await this.promptForPassphrase()
+      }
+
+      await this.addMemberToWorkspace({
+        userConfig,
+        workspaceName,
+        workspaceId,
+        passphrase,
+        email,
+      })
+    }
+  }
+
+  async catch(error: string | ApiError) {
+    if (error instanceof ApiError) {
+      const {code, message, hint} = error
+
+      this.error(message, {
+        code,
+        suggestions: hint ? [hint] : [],
+      })
+    }
+
+    throw error
+  }
+
+  async createWorkpace({userConfig, workspaceName, curve}: { userConfig: UserConfig; workspaceName: string; curve: EllipticCurveName }): Promise<never> {
+    cli.action.start(chalk.green('Generating workspace keys'))
+    const keys = await generateWorkspaceKeys({
+      accountPublicKey: userConfig.Account.PublicKey,
+      email: userConfig.Account.Email,
+      name: workspaceName,
+      curve,
+    })
+    cli.action.stop('✅')
+
+    cli.action.start(chalk.green('Creating workspace'))
+    await api.createWorkspace({
+      WorkspaceEncryptedPrivateKey: keys.encryptedPrivateKey,
       WorkspaceName: workspaceName,
+      WorkspacePublicKey: keys.publicKey,
     }, {
       ApiKey: userConfig.Device.ApiKey,
     })
+    cli.action.stop('✅')
 
-    if (workspaceMemberships.length === 0) {
-      throw new Error('workspace not found')
-    }
+    this.log(chalk.reset(`
+Workspace ${chalk.bold.cyan(workspaceName)} created! 🚀
 
-    if (workspaceMemberships.length === 1) {
-      workspaceId = workspaceMemberships[0]?.WorkspaceId!
-    }
+Let's try adding a new snip:
 
-    if (workspaceMemberships.length > 1) {
-      workspaceId = await this.promptForWorkspaceId(workspaceName, workspaceMemberships)
-    }
+    ${chalk.bold(`$ snip add DB_PASSWORD AYYGR3h64tHp9Bne --workspace ${workspaceName}`)}
+`))
 
-    // 4. Prompt for account key master passphrase if no flags sent.
-    if (!passphrase) {
-      passphrase = await this.promptForPassphrase()
-    }
+    // Exit cleanly.
+    this.exit(100)
+  }
 
+  async addMemberToWorkspace({userConfig, workspaceName, workspaceId, email, passphrase}: { userConfig: UserConfig; workspaceName: string; workspaceId: string; email: string; passphrase: string }) {
     // 5. Fetch all existing workspace memberships.
     cli.action.start(chalk.green(`Fetching existing memberships for ${workspaceName}`))
     const [account, workspace, workspaceMembers] = await Promise.all([
@@ -151,30 +227,38 @@ export default class AddMemberToWorkspaceCommand extends Command {
     }, {ApiKey: userConfig.Device.ApiKey})
     cli.action.stop('✅')
 
-    // 8. Print message.
-    this.goodbye({email, workspaceName})
-  }
-
-  async catch(error: string | ApiError) {
-    if (error instanceof ApiError) {
-      const {code, message, hint} = error
-
-      this.error(message, {
-        code,
-        suggestions: hint ? [hint] : [],
-      })
-    }
-
-    throw error
-  }
-
-  private goodbye({email, workspaceName}: { email: string; workspaceName: string }): never {
     this.log(chalk.reset(`
 Member ${chalk.bold.cyan(email)} added to ${chalk.bold.cyan(workspaceName)}! 🚀
 `))
 
     // Exit cleanly.
     this.exit(100)
+  }
+
+  private async promptForWorkspaceName(action: 'create' | 'add-member'): Promise<string> {
+    const workspaceNameSchema = yup.string().min(1).max(64).required()
+
+    const message = action === 'create' ?
+      chalk.bold('What should we name your Sniptt workspace?') :
+      chalk.bold('What\'s the name of the workspace you\'d like to add a member to?')
+
+    const {workspaceName} = await prompt<{ workspaceName: string }>({
+      type: 'input',
+      name: 'workspaceName',
+      message: message,
+      required: true,
+      initial: generateName(),
+      validate: async value => {
+        try {
+          await workspaceNameSchema.validate(value)
+          return true
+        } catch (error) {
+          return error.message
+        }
+      },
+    })
+
+    return workspaceName
   }
 
   private async promptForEmail(): Promise<string> {
@@ -196,28 +280,6 @@ Member ${chalk.bold.cyan(email)} added to ${chalk.bold.cyan(workspaceName)}! �
     })
 
     return accountEmail
-  }
-
-  private async promptForWorkspaceName({email}: { email: string }): Promise<string> {
-    const workspaceNameSchema = yup.string().min(1).max(64).required()
-
-    const {workspaceName} = await prompt<{ workspaceName: string }>({
-      type: 'input',
-      name: 'workspaceName',
-      message: chalk.bold(`What's the name of the workspace you'd like to add ${chalk.cyan(email)} to?`),
-      required: true,
-      initial: generateName(),
-      validate: async value => {
-        try {
-          await workspaceNameSchema.validate(value)
-          return true
-        } catch (error) {
-          return error.message
-        }
-      },
-    })
-
-    return workspaceName
   }
 
   private async promptForWorkspaceId(workspaceName: string, workspaceMemberships: Array<{ WorkspaceName: string; WorkspaceId: string; Role: string; AccountName: string; AccountEmail: string }>): Promise<string> {
