@@ -15,7 +15,6 @@
     "@oclif/plugin-help": "3.2.2",
     "ascii-art-ansi": "1.3.7",
     "ascii-art-image": "1.3.6",
-    "base64url": "3.0.1",
     "chalk": "4.1.1",
     "cli-ux": "5.5.1",
     "enquirer": "2.3.6",

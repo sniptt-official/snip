@@ -5,6 +5,7 @@ type Params = {
   kdf?: 'scrypt' | 'pbkdf2';
   keySize?: number;
   salt?: Buffer;
+  encoding?: BufferEncoding;
 }
 
 type Response = {
@@ -13,7 +14,7 @@ type Response = {
 }
 
 const deriveEncryptionKey = (params: Params): Response => {
-  const {passphrase, kdf = 'scrypt', keySize = 64, salt = randomBytes(64)} = params
+  const {passphrase, kdf = 'scrypt', keySize = 64, salt = randomBytes(64), encoding = 'base64'} = params
 
   let key = Buffer.alloc(0)
 
@@ -29,8 +30,8 @@ const deriveEncryptionKey = (params: Params): Response => {
   }
 
   return {
-    encryptionKeySalt: salt.toString('base64'),
-    encryptionKey: Buffer.concat([salt, key]).toString('base64'),
+    encryptionKeySalt: salt.toString(encoding),
+    encryptionKey: Buffer.concat([salt, key]).toString(encoding),
   }
 }
 

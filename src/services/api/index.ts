@@ -3,6 +3,7 @@ import addMemberToWorkspace from './methods/addMemberToWorkspace'
 import addSecret from './methods/addSecret'
 import configureAccount from './methods/configureAccount'
 import createApiKey from './methods/createApiKey'
+import createOneTimeSecret from './methods/createOneTimeSecret'
 import createWorkspace from './methods/createWorkspace'
 import getAccount from './methods/getAccount'
 import getSecret from './methods/getSecret'
@@ -18,6 +19,7 @@ export default {
   addSecret,
   configureAccount,
   createApiKey,
+  createOneTimeSecret,
   createWorkspace,
   getAccount,
   getSecret,
