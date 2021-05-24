@@ -23,7 +23,7 @@ $ npm install -g sniptt
 $ snip COMMAND
 running command...
 $ snip (-v|--version|version)
-sniptt/0.0.27 darwin-x64 node-v14.15.4
+sniptt/0.0.28 darwin-x64 node-v14.15.4
 $ snip --help [COMMAND]
 USAGE
   $ snip COMMAND
@@ -61,7 +61,7 @@ EXAMPLES
   $ snip add --file .env.prod --workspace phoenix:automation
 ```
 
-_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/add.ts)_
+_See code: [src/commands/add.ts](https://github.com/sniptt-official/cli/blob/v0.0.28/src/commands/add.ts)_
 
 ## `snip configure`
 
@@ -93,7 +93,7 @@ EXAMPLES
   $ snip configure --email "alice@example.com" --curve "brainpoolP256r1" --profile "personal"
 ```
 
-_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/configure.ts)_
+_See code: [src/commands/configure.ts](https://github.com/sniptt-official/cli/blob/v0.0.28/src/commands/configure.ts)_
 
 ## `snip get [NAME]`
 
@@ -118,7 +118,7 @@ EXAMPLES
   $ snip get .env.prod --workspace phoenix:automation -o .env.prod
 ```
 
-_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/get.ts)_
+_See code: [src/commands/get.ts](https://github.com/sniptt-official/cli/blob/v0.0.28/src/commands/get.ts)_
 
 ## `snip help [COMMAND]`
 
@@ -163,7 +163,7 @@ EXAMPLES
   $ snip ls --workspace devs
 ```
 
-_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/ls.ts)_
+_See code: [src/commands/ls.ts](https://github.com/sniptt-official/cli/blob/v0.0.28/src/commands/ls.ts)_
 
 ## `snip share [NAME]`
 
@@ -182,7 +182,7 @@ EXAMPLE
   $ snip share DB_PASSWORD
 ```
 
-_See code: [src/commands/share.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/share.ts)_
+_See code: [src/commands/share.ts](https://github.com/sniptt-official/cli/blob/v0.0.28/src/commands/share.ts)_
 
 ## `snip workspace ACTION [NAME]`
 
@@ -240,5 +240,5 @@ EXAMPLES
   $ snip workspace list-members devs
 ```
 
-_See code: [src/commands/workspace.ts](https://github.com/sniptt-official/cli/blob/v0.0.27/src/commands/workspace.ts)_
+_See code: [src/commands/workspace.ts](https://github.com/sniptt-official/cli/blob/v0.0.28/src/commands/workspace.ts)_
 <!-- commandsstop -->
