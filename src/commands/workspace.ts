@@ -36,25 +36,35 @@ export default class WorkspaceSnipCommand extends Command {
       description: 'account profile to use',
       default: 'default',
     }),
+    ...cli.table.flags(),
   };
 
   static examples = [
+    '$ snip workspace ls',
     '$ snip workspace create',
     '$ snip workspace create devs',
     '$ snip workspace add-member devs -e bob@example.com',
+    '$ snip workspace list-members devs',
   ];
 
-  static args = [{name: 'action', type: 'string', required: true, options: ['create', 'add-member']}, {name: 'name', type: 'string'}];
+  static args = [{name: 'action', type: 'string', required: true, options: ['ls', 'create', 'add-member', 'list-members']}, {name: 'name', type: 'string'}];
 
   async run() {
     const {args: {action, ...mutableArgs}, flags: {profile, curve, ...mutableFlags}} = this.parse(WorkspaceSnipCommand)
     let {name: workspaceName} = mutableArgs
-    let {email, passphrase} = mutableFlags
+    let {email, passphrase, ...tableFlags} = mutableFlags
 
     const userConfig = await config.read(this.config.configDir, profile)
 
     if (!userConfig) {
       throw new Error('missing user configuration')
+    }
+
+    if (action === 'ls') {
+      await this.listWorkspaces({
+        userConfig,
+        ...tableFlags,
+      })
     }
 
     // 1. Prompt for workspace name if no arguments sent.
@@ -109,6 +119,30 @@ export default class WorkspaceSnipCommand extends Command {
         email,
       })
     }
+
+    if (action === 'list-members') {
+      let workspaceId = userConfig.PersonalWorkspace.Id
+
+      const workspaceMemberships = await api.searchWorkspaceMemberships({
+        WorkspaceName: workspaceName,
+      }, {
+        ApiKey: userConfig.Device.ApiKey,
+      })
+
+      if (workspaceMemberships.length === 0) {
+        throw new Error('workspace not found')
+      }
+
+      if (workspaceMemberships.length === 1) {
+        workspaceId = workspaceMemberships[0]?.WorkspaceId!
+      }
+
+      if (workspaceMemberships.length > 1) {
+        workspaceId = await this.promptForWorkspaceId(workspaceName, workspaceMemberships)
+      }
+
+      await this.listWorkspaceMembers({userConfig, workspaceId, ...tableFlags})
+    }
   }
 
   async catch(error: string | ApiError) {
@@ -122,6 +156,68 @@ export default class WorkspaceSnipCommand extends Command {
     }
 
     throw error
+  }
+
+  async listWorkspaces({userConfig, ...tableFlags}: { userConfig: UserConfig }) {
+    const result = await api.listWorkspaces({}, {
+      ApiKey: userConfig.Device.ApiKey,
+    })
+
+    cli.table(result, {
+      WorkspaceId: {
+        header: 'WorkspaceId',
+        get: row => row.WorkspaceId,
+        extended: true,
+      },
+      WorkspaceName: {
+        header: 'WorkspaceName',
+        get: row => row.WorkspaceName,
+      },
+      Role: {
+        header: 'Role',
+        get: row => row.Role,
+      },
+    }, {
+      printLine: this.log,
+      ...tableFlags, // parsed flags
+    })
+
+    // Exit cleanly.
+    this.exit(100)
+  }
+
+  async listWorkspaceMembers({userConfig, workspaceId, ...tableFlags}: { userConfig: UserConfig; workspaceId: string }) {
+    const result = await api.listWorkspaceMembers({
+      WorkspaceId: workspaceId,
+    }, {
+      ApiKey: userConfig.Device.ApiKey,
+    })
+
+    cli.table(result, {
+      AccountId: {
+        header: 'AccountId',
+        get: row => row.AccountId,
+        extended: true,
+      },
+      AccountName: {
+        header: 'AccountName',
+        get: row => row.AccountName,
+      },
+      AccountEmail: {
+        header: 'AccountEmail',
+        get: row => row.AccountEmail,
+      },
+      Role: {
+        header: 'Role',
+        get: row => row.Role,
+      },
+    }, {
+      printLine: this.log,
+      ...tableFlags, // parsed flags
+    })
+
+    // Exit cleanly.
+    this.exit(100)
   }
 
   async createWorkpace({userConfig, workspaceName, curve}: { userConfig: UserConfig; workspaceName: string; curve: EllipticCurveName }): Promise<never> {

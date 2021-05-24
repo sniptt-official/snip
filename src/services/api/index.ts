@@ -10,6 +10,7 @@ import getSecret from './methods/getSecret'
 import getWorkspace from './methods/getWorkspace'
 import listSecrets from './methods/listSecrets'
 import listWorkspaceMembers from './methods/listWorkspaceMembers'
+import listWorkspaces from './methods/listWorkspaces'
 import searchWorkspaceMemberships from './methods/searchWorkspaceMemberships'
 import sendEmailVerificationCode from './methods/sendEmailVerificationCode'
 
@@ -26,6 +27,7 @@ export default {
   getWorkspace,
   listSecrets,
   listWorkspaceMembers,
+  listWorkspaces,
   searchWorkspaceMemberships,
   sendEmailVerificationCode,
 }

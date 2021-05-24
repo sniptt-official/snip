@@ -4,19 +4,16 @@ import client from '../httpClient'
 import {Header, SnipttOpts} from '../types'
 import {validateAttributes} from '../validators'
 
-type ListWorkspaceMembershipsParams = {
-  WorkspaceId: string;
+type ListWorkspacesParams = {
 };
 
 const ResponseSchema = object({
   Role: string().required(),
-  AccountId: string().required(),
-  AccountName: string().required(),
-  AccountEmail: string().required(),
-  AccountPublicKey: string().required(),
+  WorkspaceId: string().required(),
+  WorkspaceName: string().required(),
 }).required()
 
-const listWorkspaceMembers = async (params: ListWorkspaceMembershipsParams, opts: SnipttOpts) => {
+const listWorkspaceMembers = async (params: ListWorkspacesParams, opts: SnipttOpts) => {
   if (!opts.ApiKey) {
     throw new Error('missing api key')
   }
@@ -26,7 +23,7 @@ const listWorkspaceMembers = async (params: ListWorkspaceMembershipsParams, opts
   }
 
   const response = await client
-  .post('listWorkspaceMembers', {
+  .post('listWorkspaces', {
     headers: {
       [Header.ApiKey]: opts.ApiKey,
     },
