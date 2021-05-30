@@ -1,4 +1,4 @@
-import type {EllipticCurveName} from 'openpgp'
+import type { EllipticCurveName } from 'openpgp';
 
 export const ECC_CURVES: Array<EllipticCurveName> = [
   'curve25519',
@@ -10,4 +10,4 @@ export const ECC_CURVES: Array<EllipticCurveName> = [
   'brainpoolP384r1',
   'brainpoolP512r1',
   'secp256k1',
-]
+];

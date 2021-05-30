@@ -1,7 +1,0 @@
-{
-  "extends": ["oclif", "oclif-typescript"],
-  "rules": {
-    "no-warning-comments": "off",
-    "unicorn/filename-case": ["error", { "case": "camelCase" }]
-  }
-}

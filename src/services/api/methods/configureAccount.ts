@@ -1,29 +1,35 @@
+import { Asserts, object, string } from 'yup';
 
-import {Header, SnipttOpts} from '../types'
-import client from '../httpClient'
+import { Header, ProtectedApiCallOpts } from '../types';
+import client from '../httpClient';
+import { validateResponseAttributes } from '../validators';
 
-type ConfigureAccountParams = {
+type Params = {
   AccountName: string;
   AccountEncryptionKeySalt: string;
   AccountPublicKey: string;
   AccountEncryptedPrivateKey: string;
-  PersonalWorkspacePublicKey: string;
-  PersonalWorkspaceEncryptedPrivateKey: string;
+  PersonalVaultPublicKey: string;
+  PersonalVaultEncryptedPrivateKey: string;
 };
 
-const configureAccount = async (params: ConfigureAccountParams, opts: SnipttOpts) => {
-  const body = {
-    ...params,
-  }
+const ResponseSchema = object({
+  AccountId: string().required(),
+  PersonalVaultId: string().required(),
+}).required();
 
-  await client
-  .post('configureAccount', {
-    headers: {
-      [Header.ApiKey]: opts.ApiKey,
-    },
-    json: body,
-  })
-  .json()
-}
+export default async (
+  params: Params,
+  opts: ProtectedApiCallOpts,
+): Promise<Asserts<typeof ResponseSchema>> => {
+  const response = await client
+    .post('configureAccount', {
+      headers: {
+        [Header.ApiKey]: opts.ApiKey,
+      },
+      json: params,
+    })
+    .json();
 
-export default configureAccount
+  return validateResponseAttributes(response, ResponseSchema);
+};

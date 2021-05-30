@@ -1,40 +1,32 @@
+import { Asserts, object, string } from 'yup';
 
-import {object, string} from 'yup'
-import client from '../httpClient'
-import {Header, SnipttOpts} from '../types'
-import {validateAttributes} from '../validators'
+import client from '../httpClient';
+import { Header, ProtectedApiCallOpts } from '../types';
+import { validateResponseAttributes } from '../validators';
 
-type CreateOneTimeSecretParams = {
-  OneTimeSecretName?: string;
+type Params = {
   OneTimeSecretPublicKey: string;
   OneTimeSecretEncryptedPrivateKey: string;
   OneTimeSecretEncryptedContent: string;
+  OneTimeSecretContentType: 'Text' | 'File';
 };
 
-// TODO: Update schema.
 const ResponseSchema = object({
-  OneTimeSecretId: string().length(22).required(),
-}).required()
+  OneTimeSecretId: string().required(),
+}).required();
 
-const createOneTimeSecret = async (params: CreateOneTimeSecretParams, opts: SnipttOpts) => {
-  if (!opts.ApiKey) {
-    throw new Error('missing api key')
-  }
-
-  const body = {
-    ...params,
-  }
-
+export default async (
+  params: Params,
+  opts: ProtectedApiCallOpts,
+): Promise<Asserts<typeof ResponseSchema>> => {
   const response = await client
-  .post('createOneTimeSecret', {
-    headers: {
-      [Header.ApiKey]: opts.ApiKey,
-    },
-    json: body,
-  })
-  .json()
+    .post('createOneTimeSecret', {
+      headers: {
+        [Header.ApiKey]: opts.ApiKey,
+      },
+      json: params,
+    })
+    .json();
 
-  return validateAttributes(response, ResponseSchema)
-}
-
-export default createOneTimeSecret
+  return validateResponseAttributes(response, ResponseSchema);
+};

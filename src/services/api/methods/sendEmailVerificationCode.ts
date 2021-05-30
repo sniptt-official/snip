@@ -1,18 +1,9 @@
+import client from '../httpClient';
 
-import client from '../httpClient'
-
-type SendEmailVerificationCodeParams = {
+type Params = {
   Email: string;
 };
 
-const sendEmailVerificationCode = async (params: SendEmailVerificationCodeParams) => {
-  const body = {
-    ...params,
-  }
-
-  await client
-  .post('sendEmailVerificationCode', {json: body})
-  .json<Array<unknown>>()
-}
-
-export default sendEmailVerificationCode
+export default async (params: Params): Promise<void> => {
+  await client.post('sendEmailVerificationCode', { json: params });
+};

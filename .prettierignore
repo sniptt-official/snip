@@ -1,0 +1,9 @@
+# Package directories
+node_modules
+
+# Test coverage
+.nyc_output
+coverage
+
+# TypeScript build
+lib

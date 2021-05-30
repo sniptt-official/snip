@@ -1,11 +1,10 @@
-import {Asserts, BaseSchema} from 'yup'
+import { Asserts, BaseSchema } from 'yup';
 
-export const validateAttributes = <T extends BaseSchema>(
+export const validateResponseAttributes = <T extends BaseSchema>(
   item: unknown,
   schema: T,
 ): Asserts<T> =>
-    schema
-    .validate(item, {
-      stripUnknown: true,
-      abortEarly: false,
-    })
+  schema.validate(item, {
+    stripUnknown: true,
+    abortEarly: true,
+  });

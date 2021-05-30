@@ -1,39 +1,32 @@
+import { Asserts, object, string } from 'yup';
 
-import {object, string} from 'yup'
-import client from '../httpClient'
-import {Header, SnipttOpts} from '../types'
-import {validateAttributes} from '../validators'
+import client from '../httpClient';
+import { Header, ProtectedApiCallOpts } from '../types';
+import { validateResponseAttributes } from '../validators';
 
-type AddSecretParams = {
-  SecretEncryptedContent: string;
+type Params = {
   SecretName: string;
-  WorkspaceId: string;
+  SecretEncryptedContent: string;
+  SecretContentType: 'Text' | 'File';
+  VaultId: string;
 };
 
-// TODO: Update schema.
 const ResponseSchema = object({
-  SecretId: string().length(22).required(),
-}).required()
+  SecretId: string().required(),
+}).required();
 
-const addSecret = async (params: AddSecretParams, opts: SnipttOpts) => {
-  if (!opts.ApiKey) {
-    throw new Error('missing api key')
-  }
-
-  const body = {
-    ...params,
-  }
-
+export default async (
+  params: Params,
+  opts: ProtectedApiCallOpts,
+): Promise<Asserts<typeof ResponseSchema>> => {
   const response = await client
-  .post('addSecret', {
-    headers: {
-      [Header.ApiKey]: opts.ApiKey,
-    },
-    json: body,
-  })
-  .json()
+    .post('addSecret', {
+      headers: {
+        [Header.ApiKey]: opts.ApiKey,
+      },
+      json: params,
+    })
+    .json();
 
-  return validateAttributes(response, ResponseSchema)
-}
-
-export default addSecret
+  return validateResponseAttributes(response, ResponseSchema);
+};

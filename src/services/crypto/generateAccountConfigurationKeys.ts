@@ -1,70 +1,85 @@
-import {EllipticCurveName, generateKey, Message, readKey, encrypt} from 'openpgp'
-import deriveEncryptionKey from './deriveEncryptionKey'
+import {
+  EllipticCurveName,
+  generateKey,
+  readKey,
+  encrypt,
+  createMessage,
+} from 'openpgp';
 
 type Params = {
-  passphrase: string;
-  email: string;
-  name: string;
+  accountEmail: string;
+  accountName: string;
+  accountEncryptionKey: string;
   curve: EllipticCurveName;
-}
+};
 
 type Response = {
   accountKeyPair: {
-    encryptionKeySalt: string;
     publicKey: string;
     encryptedPrivateKey: string;
   };
-  personalWorkspaceKeyPair: {
+  personalVaultKeyPair: {
     publicKey: string;
     encryptedPrivateKey: string;
   };
-}
+};
 
-const generateAccountConfigurationKeys = async (params: Params): Promise<Response> => {
-  const {passphrase, email, name, curve} = params
-
-  const {encryptionKeySalt, encryptionKey} = deriveEncryptionKey({passphrase})
+const generateAccountConfigurationKeys = async (
+  params: Params,
+): Promise<Response> => {
+  const {
+    accountEmail: email,
+    accountName: name,
+    accountEncryptionKey,
+    curve,
+  } = params;
 
   const accountKeyPair = await generateKey({
     type: 'ecc',
     curve,
-    userIds: [{email, name}],
+    userIDs: [{ email, name }],
     // Passphrase not used as account private keys will be
     // encrypted as messages with encryption keys created
     // using a scrypt or pbkdf2 Key Derivation Function.
-  })
+  });
 
   const accountEncryptedPrivateKey = await encrypt({
-    message: Message.fromText(accountKeyPair.privateKeyArmored),
-    passwords: [encryptionKey],
-  })
+    message: await createMessage({ text: accountKeyPair.privateKeyArmored }),
+    passwords: [accountEncryptionKey],
+  });
 
-  const personalWorkspaceKeyPair = await generateKey({
+  const personalVaultKeyPair = await generateKey({
     type: 'ecc',
     curve,
-    userIds: [{email, name}],
+    userIDs: [{ email, name }],
     // Passphrase not used as workspace private keys will be
     // encrypted as messages with multiple public keys.
-  })
+  });
 
-  const personalWorkspaceEncryptedPrivateKey = await encrypt({
-    message: Message.fromText(personalWorkspaceKeyPair.privateKeyArmored),
+  const personalVaultEncryptedPrivateKey = await encrypt({
+    message: await createMessage({
+      text: personalVaultKeyPair.privateKeyArmored,
+    }),
     publicKeys: [
-      await readKey({armoredKey: accountKeyPair.publicKeyArmored}),
+      await readKey({ armoredKey: accountKeyPair.publicKeyArmored }),
     ],
-  })
+    // NOTE: Think about adding signature verification. Might be
+    // a bit problematic given vault owners can transfer ownership.
+    // privateKeys: [
+    //   await readKey({ armoredKey: accountKeyPair.privateKeyArmored }),
+    // ],
+  });
 
   return {
     accountKeyPair: {
-      encryptionKeySalt,
       publicKey: accountKeyPair.publicKeyArmored,
       encryptedPrivateKey: accountEncryptedPrivateKey,
     },
-    personalWorkspaceKeyPair: {
-      publicKey: personalWorkspaceKeyPair.publicKeyArmored,
-      encryptedPrivateKey: personalWorkspaceEncryptedPrivateKey,
+    personalVaultKeyPair: {
+      publicKey: personalVaultKeyPair.publicKeyArmored,
+      encryptedPrivateKey: personalVaultEncryptedPrivateKey,
     },
-  }
-}
+  };
+};
 
-export default generateAccountConfigurationKeys
+export default generateAccountConfigurationKeys;
