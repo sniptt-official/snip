@@ -27,23 +27,13 @@ export const writeUserConfig = async (
   profile: string,
   userConfig: UserConfig,
 ): Promise<string> => {
-  const configPath = join(
-    homedir(),
-    '.config',
-    'sniptt-next',
-    `${profile}.json`,
-  );
+  const configPath = join(homedir(), '.config', 'sniptt', `${profile}.json`);
   await outputJson(configPath, userConfig);
   return configPath;
 };
 
 export const readUserConfig = async (profile: string): Promise<UserConfig> => {
-  const configPath = join(
-    homedir(),
-    '.config',
-    'sniptt-next',
-    `${profile}.json`,
-  );
+  const configPath = join(homedir(), '.config', 'sniptt', `${profile}.json`);
   const userConfig = await readJson(configPath);
   return userConfig;
 };
