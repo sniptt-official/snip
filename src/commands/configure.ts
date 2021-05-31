@@ -70,6 +70,12 @@ export const handler: Handler = async (argv) => {
 
   if (isAccountConfigured) {
     spinner.start('Fetching existing account configuration');
+
+    // NOTE: Artificial delay to avoid hitting Forbidden
+    // in case the API Key is not activated yet. Might be
+    // better to implement a specific retry policy for this case.
+    // await new Promise((resolve) => setTimeout(resolve, 2_500));
+
     const accountConfiguration = await api.retrieveAccountConfiguration(
       {},
       { ApiKey: apiKey },
@@ -130,7 +136,9 @@ export const handler: Handler = async (argv) => {
     accountEncryptionKey,
     curve,
   });
+
   spinner.text = 'Configuring account';
+
   const { PersonalVaultId: personalVaultId } = await api.configureAccount(
     {
       AccountName: accountName,

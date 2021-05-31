@@ -69,8 +69,11 @@ Add an encrypted secret to your vault.
 # Add simple key/value.
 snip add DB_PASSWORD AYYGR3h64tHp9Bne
 
-# Add a file.
-snip add "local dev env" --file .env.local
+# Add simple key/value to Vault.
+snip add DB_PASSWORD AYYGR3h64tHp9Bne --vault phoenix:automation
+
+# Add file.
+snip add --file .env.prod
 
 # Add file to Vault.
 snip add --file .env.prod --vault phoenix:automation

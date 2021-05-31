@@ -23,7 +23,7 @@ export const confirmSecretName = async (): Promise<string> => {
 
   const { secretName } = await prompt<{ secretName: string }>({
     type: 'input',
-    name: 'vaultName',
+    name: 'secretName',
     message: 'What would you like to call this secret?',
     required: true,
     initial: generateName(),
