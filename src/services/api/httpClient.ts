@@ -1,20 +1,9 @@
 import got from 'got';
 
-const { BASE_URI = 'api.beta.snipt.io' } = process.env;
+const { BASE_URI = 'api.sniptt.com' } = process.env;
 
 const httpClient = got.extend({
-  prefixUrl: `https://${BASE_URI}/v2`,
-  // hooks: {
-  //   beforeError: [
-  //     (error: RequestError) => {
-  //       // const errorDetails = error.response?.body;
-
-  //       // console.error(errorDetails)
-
-  //       return error;
-  //     },
-  //   ],
-  // },
+  prefixUrl: `https://${BASE_URI}`,
 });
 
 export default httpClient;
