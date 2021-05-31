@@ -9,7 +9,7 @@ import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
 export const command: string = 'add-member <name>';
-export const desc: string = 'Add member to vault named <name>';
+export const desc: string = 'Add member to vault';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -23,7 +23,13 @@ export const builder: Builder = (yargs) =>
         choices: ['read', 'admin'],
       },
     })
-    .positional('name', { type: 'string', demandOption: true });
+    .positional('name', { type: 'string', demandOption: true })
+    .example([
+      // ['$0 vault add-member'],
+      // ['$0 vault add-member devs'],
+      ['$0 vault add-member devs -e alice@example.com'],
+      ['$0 vault add-member creds:aws -e alice@example.com -r admin'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({

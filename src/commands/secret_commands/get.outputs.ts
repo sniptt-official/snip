@@ -8,7 +8,7 @@ export const secretRetrieved = ({
   secretContentType,
   vaultName,
   json,
-  output,
+  out,
 }: {
   secretId: string;
   secretName: string;
@@ -16,10 +16,10 @@ export const secretRetrieved = ({
   secretContentType: string;
   vaultName: string | undefined;
   json: boolean | undefined;
-  output: string | undefined;
+  out: string | undefined;
 }) => {
-  if (typeof output === 'string') {
-    const fileName = output === '' ? secretName : output;
+  if (typeof out === 'string') {
+    const fileName = out === '' ? secretName : out;
     writeFileSync(fileName, secretContent);
     process.exit(0);
   }

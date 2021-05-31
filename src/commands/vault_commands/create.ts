@@ -9,7 +9,7 @@ import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
 export const command: string = 'create [name]';
-export const desc: string = 'Create vault named [name]';
+export const desc: string = 'Create vault';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -23,7 +23,13 @@ export const builder: Builder = (yargs) =>
         default: 'curve25519' as const,
       },
     })
-    .positional('name', { type: 'string' });
+    .positional('name', { type: 'string' })
+    .example([
+      ['$0 vault create'],
+      ['$0 vault create devs'],
+      ['$0 vault create creds:aws -c secp256k1 --profile project:phoenix'],
+      ['$0 vault create creds:aws -q --json | jq -r .VaultId | pbcopy'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({

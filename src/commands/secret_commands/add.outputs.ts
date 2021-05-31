@@ -15,7 +15,7 @@ export const secretAdded = ({
 To view:
 
     ${chalk.bold(
-      `$ snip get "${secretName}"${vaultName ? ` --vault ${vaultName}` : ''}`,
+      `$ snip get "${secretName}"${vaultName ? ` --vault "${vaultName}"` : ''}`,
     )}
 
 `);

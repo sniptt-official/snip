@@ -8,14 +8,19 @@ import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 
 export const command: string = 'list-members <name>';
-export const desc: string = 'List members of vault named <name>';
+export const desc: string = 'List members of vault';
 
 export const builder: Builder = (yargs) =>
   yargs
     .options({
       ...baseOptions,
     })
-    .positional('name', { type: 'string', demandOption: true });
+    .positional('name', { type: 'string', demandOption: true })
+    .example([
+      // ['$0 vault list-members'],
+      ['$0 vault list-members devs'],
+      ['$0 vault list-members devs -q --json | jq -r ".[].AccountId"'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({

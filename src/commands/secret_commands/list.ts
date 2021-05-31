@@ -9,13 +9,20 @@ import { readUserConfig } from '../../services/config';
 
 export const command: string = 'list';
 export const aliases: Array<string> = ['ls'];
-export const desc: string = 'List secrets in vault named <name>';
+export const desc: string = 'List vault secrets';
 
 export const builder: Builder = (yargs) =>
-  yargs.options({
-    ...baseOptions,
-    vault: { type: 'string', alias: 'v' },
-  });
+  yargs
+    .options({
+      ...baseOptions,
+      vault: { type: 'string', alias: 'v' },
+    })
+    .example([
+      ['$0 list'],
+      ['$0 ls --profile project:phoenix'],
+      ['$0 ls --vault devs'],
+      ['$0 ls -v creds:aws -q --json | jq -r ".[].SecretId"'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({

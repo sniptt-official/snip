@@ -11,7 +11,7 @@ import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
 export const command: string = 'add [name] [value]';
-export const desc: string = 'Add end-to-end encrypted secret named [name]';
+export const desc: string = 'Add end-to-end encrypted secret to vault';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -22,6 +22,12 @@ export const builder: Builder = (yargs) =>
     })
     .positional('name', { type: 'string' })
     .positional('value', { type: 'string', conflicts: 'file' })
+    .example([
+      ['$0 add'],
+      ['$0 add DB_PASSWORD 5Fqp2Mrs74Bp1RwSyV --profile project:phoenix'],
+      ['$0 add --file .env.prod --vault devs'],
+      ['$0 add -f alice.csv -v creds:aws -q --json | jq -r .SecretId | pbcopy'],
+    ])
     .check((argv, _options) => {
       const { value, file } = argv;
 

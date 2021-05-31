@@ -35,38 +35,13 @@ If you would like to configure a new profile, run the following:
 
 export const deviceConfigured = async (configPath: string) => {
   process.stdout.write(`
-Configuration written to ${chalk.cyan(configPath)}.
+✨ Configuration written to ${chalk.cyan(configPath)}.
 
 Let's try adding a new snip:
 
-    ${chalk.bold('$ snip add DB_PASSWORD zHE4JDdYCNo5zJR9')}
+    ${chalk.bold('$ snip add')}
 
 `);
 
   process.exit(0);
 };
-
-// TODO: Decide what to do with json output option.
-// export const deviceConfiguredJson = ({
-//   accountId,
-//   deviceId,
-//   personalVaultId,
-// }: {
-//   accountId: string;
-//   deviceId: string;
-//   personalVaultId: string;
-// }) => {
-//   process.stdout.write(
-//     JSON.stringify(
-//       {
-//         AccountId: accountId,
-//         DeviceId: deviceId,
-//         PersonalVaultId: personalVaultId,
-//       },
-//       null,
-//       2,
-//     ),
-//   );
-
-//   process.exit(0);
-// };

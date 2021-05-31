@@ -9,7 +9,7 @@ import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
 export const command: string = 'remove-member <name>';
-export const desc: string = 'Remove member from vault named <name>';
+export const desc: string = 'Remove member from vault';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -17,7 +17,12 @@ export const builder: Builder = (yargs) =>
       ...baseOptions,
       email: { type: 'string', alias: 'e', demandOption: true },
     })
-    .positional('name', { type: 'string', demandOption: true });
+    .positional('name', { type: 'string', demandOption: true })
+    .example([
+      // ['$0 vault remove-member'],
+      // ['$0 vault remove-member devs'],
+      ['$0 vault remove-member devs -e alice@example.com'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({

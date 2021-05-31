@@ -4,7 +4,7 @@ import type { BaseOptions } from '../../shared';
 
 export type Options = BaseOptions & {
   name: string;
-  output: string | undefined;
+  out: string | undefined;
   vault: string | undefined;
 };
 

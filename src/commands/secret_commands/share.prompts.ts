@@ -5,6 +5,27 @@ import * as yup from 'yup';
 import crypto from '../../services/crypto';
 import { getAccountEncryptionKey } from '../../services/keychain';
 
+export const confirmSecretValue = async (): Promise<string> => {
+  const secretValueSchema = yup.string().max(10_000).required();
+
+  const { secretValue } = await prompt<{ secretValue: string }>({
+    type: 'invisible',
+    name: 'secretValue',
+    message: `What's the value of the secret you'd like to share?`,
+    required: true,
+    validate: async (value) => {
+      try {
+        await secretValueSchema.validate(value);
+        return true;
+      } catch (error) {
+        return error.message;
+      }
+    },
+  });
+
+  return secretValue;
+};
+
 export const confirmVaultId = async ({
   vaultMemberships,
 }: {

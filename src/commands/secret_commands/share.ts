@@ -26,6 +26,11 @@ export const builder: Builder = (yargs) =>
       },
     })
     .positional('value', { type: 'string', conflicts: 'file' })
+    .example([
+      ['$0 share'],
+      ['$0 share 5Fqp2Mrs74Bp1RwSyV'],
+      ['$0 share -f alice.csv'],
+    ])
     .check((argv, _options) => {
       const { value, file } = argv;
 
@@ -36,7 +41,7 @@ export const builder: Builder = (yargs) =>
       } else if (value) {
         contentLength = Buffer.from(value, 'utf8').length;
       } else {
-        throw new Error('must provide value or file as input');
+        contentLength = 0;
       }
 
       if (contentLength > 10_000) {
@@ -104,6 +109,9 @@ const getBinaryValue = async ({
   } else if (value) {
     return { contentType: 'text', content: Buffer.from(value, 'utf8') };
   } else {
-    throw new Error('must provide value or file as input');
+    return {
+      contentType: 'text',
+      content: Buffer.from(await prompts.confirmSecretValue(), 'utf8'),
+    };
   }
 };

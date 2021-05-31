@@ -11,25 +11,31 @@ import { readUserConfig, writeUserConfig } from '../services/config';
 import { saveAccountEncryptionKey } from '../services/keychain';
 
 export const command: string = 'configure';
-export const desc: string = 'Configure device';
+export const desc: string = 'Configure device with new or existing account';
 
 export const builder: Builder = (yargs) =>
-  yargs.options({
-    ...baseOptions,
-    email: { type: 'string', desc: 'account email', alias: 'e' },
-    name: {
-      type: 'string',
-      desc: 'account display name if new account',
-      alias: 'n',
-    },
-    curve: {
-      type: 'string',
-      desc: 'ecc curve name used to generate account keys if new account',
-      alias: 'c',
-      choices: crypto.constants.ECC_CURVES,
-      default: 'curve25519' as const,
-    },
-  });
+  yargs
+    .options({
+      ...baseOptions,
+      email: { type: 'string', desc: 'account email', alias: 'e' },
+      name: {
+        type: 'string',
+        desc: 'account display name if new account',
+        alias: 'n',
+      },
+      curve: {
+        type: 'string',
+        desc: 'ecc curve name used to generate account keys if new account',
+        alias: 'c',
+        choices: crypto.constants.ECC_CURVES,
+        default: 'curve25519' as const,
+      },
+    })
+    .example([
+      ['$0 configure'],
+      ['$0 configure --email alice@example.com --name 🐇 --curve p521'],
+      ['$0 configure --email bob@example.com --profile bob'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({

@@ -1,30 +1,43 @@
 #!/usr/bin/env node
 
+import chalk from 'chalk';
 import { RequestError } from 'got';
+import { EOL } from 'os';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+// .showHelpOnFail(false, 'Specify --help for available options')
 yargs(hideBin(process.argv))
   .commandDir('commands')
-  .demandCommand()
-  .help()
+  .command(
+    '$0',
+    'Sniptt CLI usage',
+    () => {},
+    () => {
+      yargs.showHelp();
+    },
+  )
+  .help('h')
+  .alias('h', 'help')
   .fail((message, error) => {
     if (message) {
-      process.stderr.write(message);
+      process.stderr.write(chalk.red(message) + EOL);
       process.exit(1);
     }
+
+    let errorMessage =
+      'Unknown error occurred, please contact support@sniptt.com';
 
     if (error instanceof RequestError) {
       const errorDetails = error.response?.body;
-      process.stderr.write(
-        typeof errorDetails === 'string'
-          ? errorDetails
-          : 'unknown error occurred',
-      );
-      process.exit(1);
+
+      if (typeof errorDetails === 'string') {
+        errorMessage = errorDetails;
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
     }
 
-    console.error(error);
+    process.stderr.write(chalk.red(errorMessage) + EOL);
     process.exit(1);
-  })
-  .showHelpOnFail(false, 'Specify --help for available options').argv;
+  }).argv;

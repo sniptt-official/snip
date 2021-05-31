@@ -11,9 +11,15 @@ export const aliases: Array<string> = ['ls'];
 export const desc: string = 'List vaults you own or are a member of';
 
 export const builder: Builder = (yargs) =>
-  yargs.options({
-    ...baseOptions,
-  });
+  yargs
+    .options({
+      ...baseOptions,
+    })
+    .example([
+      ['$0 vault list'],
+      ['$0 vault ls'],
+      ['$0 vault ls --profile project:phoenix -q --json | jq -r ".[].VaultId"'],
+    ]);
 
 export const handler: Handler = async (argv) => {
   const spinner = ora({
