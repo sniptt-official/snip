@@ -28,7 +28,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "package": "pkg . --compress GZip --targets node14-linux-x64,node14-macos-x64 --out-path bin",
+    "package": "pkg . --no-bytecode --compress GZip --targets node14-linux-x64,node14-macos-x64 --out-path bin",
     "format": "prettier --loglevel warn --write \"**/*.{ts,js,json}\"",
     "format:check": "prettier --loglevel warn --check \"**/*.{ts,js,json}\""
   },
