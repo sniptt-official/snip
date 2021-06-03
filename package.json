@@ -28,6 +28,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
+    "package": "pkg . --compress GZip --targets node14-linux-x64,node14-macos-x64 --out-path bin",
     "format": "prettier --loglevel warn --write \"**/*.{ts,js,json}\"",
     "format:check": "prettier --loglevel warn --check \"**/*.{ts,js,json}\""
   },
@@ -49,6 +50,7 @@
     "@types/fs-extra": "9.0.11",
     "@types/node": "15.6.0",
     "@types/yargs": "17.0.0",
+    "pkg": "5.2.1",
     "prettier": "2.3.0",
     "typescript": "4.2.4"
   }
