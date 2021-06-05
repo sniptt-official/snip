@@ -152,7 +152,7 @@ For advanced usage, type `$ snip share -h`.
 
 Sniptt is **free to use** for personal use with the following limits:
 
-*   Up to 100 secrets secrets per month
+*   Up to 100 secrets per month
 *   Up to 100 URL shares per month
 *   1 additional Vault (up to 3 members)
 
