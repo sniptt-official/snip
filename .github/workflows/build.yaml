@@ -1,0 +1,77 @@
+name: Build binaries for macOS and Linux
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-macos:
+
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run package:macos
+
+      - name: Create tarball and compute checksum
+        run: |
+          mv bin/macos/snip snip
+          tar -cvzf snip.tar.gz snip
+          shasum -a 256 snip.tar.gz > checksum.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Copy tarball and checksum to S3
+        run: |
+          aws s3 cp snip.tar.gz s3://bin.sniptt.com/macos/latest/snip.tar.gz
+          aws s3 cp checksum.txt s3://bin.sniptt.com/macos/latest/checksum.txt
+
+  build-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run package:linux
+
+      - name: Create tarball and compute checksum
+        run: |
+          mv bin/linux/snip snip
+          tar -cvzf snip.tar.gz snip
+          sha256sum snip.tar.gz > checksum.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Copy tarball and checksum to S3
+        run: |
+          aws s3 cp snip.tar.gz s3://bin.sniptt.com/linux/latest/snip.tar.gz
+          aws s3 cp checksum.txt s3://bin.sniptt.com/linux/latest/checksum.txt

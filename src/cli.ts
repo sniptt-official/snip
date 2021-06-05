@@ -6,7 +6,6 @@ import { EOL } from 'os';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-// .showHelpOnFail(false, 'Specify --help for available options')
 yargs(hideBin(process.argv))
   .commandDir('commands')
   .command(

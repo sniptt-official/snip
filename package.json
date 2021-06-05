@@ -28,7 +28,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "package": "pkg . --no-bytecode --compress GZip",
+    "package:linux": "pkg . --no-bytecode --targets node14-linux-x64 --output bin/linux/snip",
+    "package:macos": "pkg . --no-bytecode --targets node14-macos-x64 --output bin/macos/snip",
     "format": "prettier --loglevel warn --write \"**/*.{ts,js,json}\"",
     "format:check": "prettier --loglevel warn --check \"**/*.{ts,js,json}\""
   },
@@ -55,11 +56,6 @@
     "typescript": "4.2.4"
   },
   "pkg": {
-    "scripts": "build/**/*.js",
-    "targets": [
-      "node14-linux-x64",
-      "node14-macos-x64"
-    ],
-    "outputPath": "bin"
+    "scripts": "build/**/*.js"
   }
 }
