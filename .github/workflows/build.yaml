@@ -14,14 +14,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build
+      - name: Setup
         uses: actions/setup-node@v2
         with:
           node-version: '14.x'
 
-      - run: npm ci
-      - run: npm run build
-      - run: npm run package:macos
+      - name: Package
+        run: |
+          npm ci
+          npm run build
+          npm run package:macos
+      
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Create tarball and compute checksum
         run: |
@@ -38,8 +44,10 @@ jobs:
 
       - name: Copy tarball and checksum to S3
         run: |
-          aws s3 cp snip.tar.gz s3://bin.sniptt.com/macos/latest/snip.tar.gz
-          aws s3 cp checksum.txt s3://bin.sniptt.com/macos/latest/checksum.txt
+          aws s3 cp snip.tar.gz s3://bin.sniptt.com/macos/$VERSION/snip.tar.gz
+          aws s3 cp checksum.txt s3://bin.sniptt.com/macos/$VERSION/checksum.txt
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
 
   build-linux:
 
@@ -49,14 +57,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build
+      - name: Setup
         uses: actions/setup-node@v2
         with:
           node-version: '14.x'
 
-      - run: npm ci
-      - run: npm run build
-      - run: npm run package:linux
+      - name: Package
+        run: |
+          npm ci
+          npm run build
+          npm run package:linux
+
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Create tarball and compute checksum
         run: |
@@ -73,5 +87,24 @@ jobs:
 
       - name: Copy tarball and checksum to S3
         run: |
-          aws s3 cp snip.tar.gz s3://bin.sniptt.com/linux/latest/snip.tar.gz
-          aws s3 cp checksum.txt s3://bin.sniptt.com/linux/latest/checksum.txt
+          aws s3 cp snip.tar.gz s3://bin.sniptt.com/linux/$VERSION/snip.tar.gz
+          aws s3 cp checksum.txt s3://bin.sniptt.com/linux/$VERSION/checksum.txt
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+
+  create-release:
+
+    needs: [build-macos,build-linux]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true 
+          # body_path: CHANGELOG.md
+          files: |
+            LICENSE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
