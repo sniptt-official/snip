@@ -1,6 +1,6 @@
 {
   "name": "sniptt",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "The secret manager that developers love!",
   "main": "./build/cli.js",
   "bin": {
