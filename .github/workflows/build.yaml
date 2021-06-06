@@ -24,30 +24,17 @@ jobs:
           npm ci
           npm run build
           npm run package:macos
-      
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Create tarball and compute checksum
+      - name: Create tarball
         run: |
           mv bin/macos/snip snip
-          tar -cvzf snip.tar.gz snip
-          shasum -a 256 snip.tar.gz > checksum.txt
+          tar -cvzf snip-macos-x64.tar.gz snip
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-
-      - name: Copy tarball and checksum to S3
-        run: |
-          aws s3 cp snip.tar.gz s3://bin.sniptt.com/macos/$VERSION/snip.tar.gz
-          aws s3 cp checksum.txt s3://bin.sniptt.com/macos/$VERSION/checksum.txt
-        env:
-          VERSION: ${{ steps.get_version.outputs.VERSION }}
+          name: bin-macos
+          path: snip-macos-x64.tar.gz
 
   build-linux:
 
@@ -68,29 +55,16 @@ jobs:
           npm run build
           npm run package:linux
 
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
-
-      - name: Create tarball and compute checksum
+      - name: Create tarball
         run: |
           mv bin/linux/snip snip
-          tar -cvzf snip.tar.gz snip
-          sha256sum snip.tar.gz > checksum.txt
+          tar -cvzf snip-linux-x64.tar.gz snip
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-
-      - name: Copy tarball and checksum to S3
-        run: |
-          aws s3 cp snip.tar.gz s3://bin.sniptt.com/linux/$VERSION/snip.tar.gz
-          aws s3 cp checksum.txt s3://bin.sniptt.com/linux/$VERSION/checksum.txt
-        env:
-          VERSION: ${{ steps.get_version.outputs.VERSION }}
+          name: bin-linux
+          path: snip-linux-x64.tar.gz
 
   create-release:
 
@@ -99,12 +73,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download macos tarball
+        uses: actions/download-artifact@v2
+        with:
+          name: bin-macos
+
+      - name: Download linux tarball
+        uses: actions/download-artifact@v2
+        with:
+          name: bin-linux
+
+      - name: Compute checksums
+        run: |
+          sha256sum snip-macos-x64.tar.gz >> checksums.md
+          sha256sum snip-linux-x64.tar.gz >> checksums.md
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true 
-          # body_path: CHANGELOG.md
+          body_path: checksums.md
           files: |
             LICENSE
+            snip-macos-x64.tar.gz
+            snip-linux-x64.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 <p align="center" style="text-align:center;">
   <a href="https://sniptt.com">
-    <img src="./assets/readme-hero-logo.svg" alt="Sniptt Logo" 🔐/>
+    <img src="./assets/readme-hero-logo.svg" alt="Sniptt Logo" />
   </a>
 </p>
 
@@ -14,7 +14,30 @@
   <b>Please note that this project is under active development. APIs might change before version 1 is released.</b>
 </div>
 
+## Table of Contents
+
+*   [Introduction](#introduction)
+*   [Install](#install)
+*   [Features](#features)
+*   [Basic Usage](#basic-usage)
+    *   [Setup](#setup)
+    *   [Add secrets](#add-secrets)
+    *   [Read secrets](#read-secrets)
+    *   [Vaults](#vaults)
+    *   [Sharing](#sharing)
+*   [Usage Limits](#usage-limits)
+*   [FAQ](#faq)
+    *   [Who can access my secrets?](#who-can-access-my-secrets)
+*   [Manual install](#manual-install)
+    *   [macOS manual install](#macos-manual-install)
+        *   [Uninstall](#uninstall)
+    *   [Linux manual install](#linux-manual-install)
+        *   [Uninstall](#uninstall-1)
+*   [License](#license)
+
 ## Introduction
+
+<img src="https://www.sniptt.com/img/terminal/vault-example.gif" alt="Vault example" />
 
 Sniptt is a secret manager for developers.
 
@@ -141,16 +164,15 @@ If you wish to share your secrets with others, then you will need to create a sh
 1.  Download the tarball using the `curl` command. The `-o` option specifies the file name that the downloaded tarball is written to. In this example, the file is written to `snip.tar.gz` in the current folder.
 
 ```sh
-$ curl https://bin.sniptt.com/macos/v0.0.38/snip.tar.gz -o snip.tar.gz
+$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.39/snip-macos-x64.tar.gz -o snip.tar.gz
 ```
 
 NOTE: You can install to any folder, or choose the recommended `/usr/local/snip-cli`.
 
-To verify the integrity of the tarball, run the following command.
+To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.39).
 
 ```sh
 $ sha256sum snip.tar.gz
-cce8293125b90d3e2b148565e3bfc55f067b3bdbff8b60cd7c4fa3d563472dfd  snip.tar.gz
 ```
 
 2.  Extract the binary.
@@ -208,16 +230,15 @@ $ rm -rf /folder/installed/snip-cli
 1.  Download the tarball using the `curl` command. The `-o` option specifies the file name that the downloaded tarball is written to. In this example, the file is written to `snip.tar.gz` in the current directory.
 
 ```sh
-$ curl https://bin.sniptt.com/linux/v0.0.38/snip.tar.gz -o snip.tar.gz
+$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.39/snip-linux-x64.tar.gz -o snip.tar.gz
 ```
 
 NOTE: You can install to any directory, or choose the recommended `/usr/local/snip-cli`.
 
-To verify the integrity of the tarball, run the following command.
+To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.39).
 
 ```sh
 $ shasum -a 256 snip.tar.gz
-85fd7f57c5ff6a65dda7746a6c2f8e71bbf76f1da551f668b65c19e47b4c379a  snip.tar.gz
 ```
 
 2.  Extract the binary.
