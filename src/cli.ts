@@ -20,7 +20,7 @@ yargs(hideBin(process.argv))
   // Enable strict mode.
   .strict()
   // Useful aliases.
-  .alias({ h: 'help', v: 'version' })
+  .alias({ h: 'help' })
   // Be nice.
   .epilogue('For more information, check https://sniptt.com')
   // Handle failures.
