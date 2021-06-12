@@ -1,4 +1,4 @@
-name: Build binaries for macOS and Linux
+name: Build binaries for macOS and Linux and create release
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   build-macos:
-
     runs-on: macos-latest
 
     steps:
@@ -37,7 +36,6 @@ jobs:
           path: snip-macos-x64.tar.gz
 
   build-linux:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -67,8 +65,7 @@ jobs:
           path: snip-linux-x64.tar.gz
 
   create-release:
-
-    needs: [build-macos,build-linux]
+    needs: [build-macos, build-linux]
 
     runs-on: ubuntu-latest
 
@@ -91,7 +88,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true 
+          prerelease: true
           body_path: checksums.md
           files: |
             LICENSE

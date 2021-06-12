@@ -4,7 +4,6 @@ on: [pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -12,12 +11,18 @@ jobs:
         node-version: ['12.x', '13.x', '14.x', '15.x', '16.x']
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run format:check
-    - run: npm run lint:check
-    - run: npm test
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Perform quality checks
+        run: |
+          npm ci
+          npm run build
+          npm run format:check
+          npm run lint:check
+          npm test
