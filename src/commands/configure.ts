@@ -10,8 +10,8 @@ import { Builder, Handler } from './configure.types';
 import { readUserConfig, writeUserConfig } from '../services/config';
 import { saveAccountEncryptionKey } from '../services/keychain';
 
-export const command: string = 'configure';
-export const desc: string = 'Configure device with new or existing account';
+export const command = 'configure';
+export const desc = 'Configure device with new or existing account';
 
 export const builder: Builder = (yargs) =>
   yargs

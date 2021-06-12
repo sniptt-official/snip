@@ -6,7 +6,7 @@ export const secretAdded = ({
 }: {
   secretName: string;
   vaultName: string | undefined;
-}) => {
+}): never => {
   process.stdout.write(`
 ✨ ${chalk.cyan(secretName)} added to ${chalk.cyan(
     vaultName ? vaultName : 'Personal',
@@ -29,7 +29,7 @@ export const secretAddedJson = ({
 }: {
   secretId: string;
   vaultId: string;
-}) => {
+}): never => {
   process.stdout.write(
     JSON.stringify({ SecretId: secretId, VaultId: vaultId }, null, 2),
   );

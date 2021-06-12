@@ -7,8 +7,8 @@ import { baseOptions } from '../../shared';
 import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 
-export const command: string = 'list-members <name>';
-export const desc: string = 'List members of vault';
+export const command = 'list-members <name>';
+export const desc = 'List members of vault';
 
 export const builder: Builder = (yargs) =>
   yargs

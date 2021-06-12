@@ -9,6 +9,6 @@ export type Options = BaseOptions & {
   curve: EllipticCurveName;
 };
 
-export type Builder = CommandBuilder<{}, Options>;
+export type Builder = CommandBuilder<Options, Options>;
 
 export type Handler = (argv: Arguments<Options>) => PromiseLike<void>;

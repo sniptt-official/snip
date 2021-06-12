@@ -8,7 +8,7 @@ export const vaultCreated = ({
   vaultId: string;
   vaultName: string;
   json: boolean | undefined;
-}) => {
+}): never => {
   if (json) {
     process.stdout.write(
       JSON.stringify({ VaultId: vaultId, VaultName: vaultName }, null, 2),

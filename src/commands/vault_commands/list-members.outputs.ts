@@ -13,7 +13,7 @@ export const listVaultMemberships = ({
     AccountPublicKey: string;
   }>;
   json: boolean | undefined;
-}) => {
+}): never => {
   if (json) {
     process.stdout.write(JSON.stringify(vaultMembers, null, 2));
     process.exit(0);

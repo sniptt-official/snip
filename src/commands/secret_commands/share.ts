@@ -1,3 +1,4 @@
+import base64url from 'base64url';
 import ora from 'ora';
 import { readFile, statSync } from 'fs-extra';
 
@@ -9,8 +10,8 @@ import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
-export const command: string = 'share [value]';
-export const desc: string = 'Create one-time end-to-end encrypted secret';
+export const command = 'share [value]';
+export const desc = 'Create one-time end-to-end encrypted secret';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -64,11 +65,12 @@ export const handler: Handler = async (argv) => {
 
   spinner.start('Encrypting contents');
   const { encryptionKey } = crypto.deriveEncryptionKey({});
+  const urlSafeEncryptionKey = base64url.fromBase64(encryptionKey);
 
   const keyPair = await crypto.generateOneTimeSecretKeyPair({
     accountEmail: userConfig.Account.Email,
     accountName: userConfig.Account.Name,
-    encryptionKey,
+    encryptionKey: urlSafeEncryptionKey,
     curve,
   });
 
@@ -92,7 +94,7 @@ export const handler: Handler = async (argv) => {
 
   outputs.oneTimeSecretCreated({
     oneTimeSecretId,
-    token: encryptionKey,
+    token: urlSafeEncryptionKey,
     json,
   });
 };

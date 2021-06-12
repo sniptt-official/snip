@@ -6,9 +6,9 @@ import { baseOptions } from '../../shared';
 import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 
-export const command: string = 'list';
+export const command = 'list';
 export const aliases: Array<string> = ['ls'];
-export const desc: string = 'List vaults you own or are a member of';
+export const desc = 'List vaults you own or are a member of';
 
 export const builder: Builder = (yargs) =>
   yargs

@@ -8,9 +8,8 @@ import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
-export const command: string = 'get <name>';
-export const desc: string =
-  'Fetch and decrypt end-to-end encrypted secret from vault';
+export const command = 'get <name>';
+export const desc = 'Fetch and decrypt end-to-end encrypted secret from vault';
 
 export const builder: Builder = (yargs) =>
   yargs

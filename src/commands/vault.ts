@@ -1,7 +1,7 @@
 import type { Arguments, CommandBuilder } from 'yargs';
 
-export const command: string = 'vault <command>';
-export const desc: string = 'Manage vaults';
+export const command = 'vault <command>';
+export const desc = 'Manage vaults';
 export const builder: CommandBuilder = (yargs) =>
   yargs.commandDir('vault_commands');
-export const handler = (_argv: Arguments) => {};
+export const handler = (_argv: Arguments): void => undefined;
