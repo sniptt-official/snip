@@ -8,7 +8,7 @@
     "snip": "./build/cli.js"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   },
   "files": [
     "/assets",
@@ -16,24 +16,30 @@
   ],
   "keywords": [
     "cli",
-    "blockchain",
+    "encryption",
     "openpgp",
     "end-to-end-encryption",
-    "secrets-management"
+    "secrets-management",
+    "vault",
+    "secrets",
+    "sharing-secrets"
   ],
-  "author": "sniptt.com <support+npm@sniptt.com> (https://github.com/sniptt-official)",
+  "author": "sniptt.com <support@sniptt.com> (https://github.com/sniptt-official)",
   "license": "MIT",
-  "homepage": "https://github.com/sniptt-official/cli",
-  "bugs": "https://github.com/sniptt-official/cli/issues",
+  "homepage": "https://github.com/sniptt-official/snip-cli",
+  "bugs": "https://github.com/sniptt-official/snip-cli/issues",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ava",
     "build": "tsc",
     "package:linux": "pkg . --no-bytecode --targets node14-linux-x64 --output bin/linux/snip",
     "package:macos": "pkg . --no-bytecode --targets node14-macos-x64 --output bin/macos/snip",
-    "format": "prettier --loglevel warn --write \"**/*.{ts,js,json}\"",
-    "format:check": "prettier --loglevel warn --check \"**/*.{ts,js,json}\""
+    "format": "prettier --loglevel warn --write \"**/*.{ts,js,json,yaml}\"",
+    "format:check": "prettier --loglevel warn --check \"**/*.{ts,js,json,yaml}\"",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint:check": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
+    "base64url": "3.0.1",
     "chalk": "4.1.1",
     "cli-table": "0.3.6",
     "enquirer": "2.3.6",
@@ -48,14 +54,30 @@
   },
   "devDependencies": {
     "@types/cli-table": "0.3.0",
+    "@types/faker": "5.5.6",
     "@types/fs-extra": "9.0.11",
     "@types/node": "15.6.0",
     "@types/yargs": "17.0.0",
+    "@typescript-eslint/eslint-plugin": "4.26.0",
+    "@typescript-eslint/parser": "4.26.0",
+    "ava": "3.15.0",
+    "eslint": "7.28.0",
+    "eslint-config-prettier": "8.3.0",
+    "faker": "5.5.3",
     "pkg": "5.2.1",
     "prettier": "2.3.0",
+    "ts-node": "10.0.0",
     "typescript": "4.2.4"
   },
   "pkg": {
     "scripts": "build/**/*.js"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   }
 }
