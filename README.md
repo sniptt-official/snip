@@ -18,6 +18,9 @@
 
 *   [Introduction](#introduction)
 *   [Install](#install)
+    *   [Homebrew](#homebrew)
+    *   [npm](#npm)
+    *   [Manual](#manual)
 *   [Features](#features)
 *   [Basic Usage](#basic-usage)
     *   [Setup](#setup)
@@ -28,11 +31,7 @@
 *   [Usage Limits](#usage-limits)
 *   [FAQ](#faq)
     *   [Who can access my secrets?](#who-can-access-my-secrets)
-*   [Manual install](#manual-install)
-    *   [macOS manual install](#macos-manual-install)
-        *   [Uninstall](#uninstall)
-    *   [Linux manual install](#linux-manual-install)
-        *   [Uninstall](#uninstall-1)
+    *   [Why does it sometimes take longer to fulfill a request?](#why-does-it-sometimes-take-longer-to-fulfill-a-request)
 *   [License](#license)
 
 ## Introduction
@@ -47,11 +46,25 @@ You can finally say goodbye to 1Password, LastPass, and Dashlane 👋.
 
 ## Install
 
+### Homebrew
+
+The recommended way to install `snip` on macOS is via Homebrew.
+
 ```sh
 $ brew install sniptt-official/snip/snip
 ```
 
-See manual installation instructions for [macOS](#macos-manual-install) and [Linux](#linux-manual-install).
+### npm
+
+Alternatively, you can also install `snip` via npm.
+
+```sh
+npm install sniptt -g
+```
+
+### Manual
+
+For manual installation instructions on macOS and Linux, please refer to the dedicated [install docs](./docs/manual-install.md).
 
 ## Features
 
@@ -141,7 +154,7 @@ For advanced usage, type `$ snip share -h`.
 
 ## Usage Limits
 
-Sniptt is **free to use** for personal use with the following limits:
+Sniptt is **free** for personal use with the following limits:
 
 *   Up to 100 secrets per month
 *   Up to 100 URL shares per month
@@ -157,139 +170,9 @@ To increase limits and access more features, please email us at support@sniptt.c
 
 If you wish to share your secrets with others, then you will need to create a shared Vault or use the one-time-secret functionality to do so.
 
-## Manual install
+### Why does it sometimes take longer to fulfill a request?
 
-### macOS manual install
-
-1.  Download the tarball using the `curl` command. The `-o` option specifies the file name that the downloaded tarball is written to. In this example, the file is written to `snip.tar.gz` in the current folder.
-
-```sh
-$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.39/snip-macos-x64.tar.gz -o snip.tar.gz
-```
-
-NOTE: You can install to any folder, or choose the recommended `/usr/local/snip-cli`.
-
-To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.39).
-
-```sh
-$ sha256sum snip.tar.gz
-```
-
-2.  Extract the binary.
-
-```sh
-$ tar -xf snip.tar.gz
-```
-
-3.  Create a symlink to the user's `bin` folder.
-
-```sh
-$ sudo ln -sf snip /usr/local/bin/snip
-```
-
-NOTE: You must have write permissions to the specified folder. Creating a symlink to a folder that is already in your path eliminates the need to add the install folder to the user's `$PATH` variable.
-
-4.  Verify the installation.
-
-Assuming `/usr/local/bin` is on your `PATH`, you can now run:
-
-```sh
-$ snip --version
-```
-
-#### Uninstall
-
-1.  Find the folder that contains the symlink to the main binary.
-
-```sh
-$ which snip
-/usr/local/bin/snip
-```
-
-2.  Using that information, run the following command to find the installation folder that the symlink points to.
-
-```sh
-$ ls -l /usr/local/bin/snip
-lrwxr-xr-x  1 user  admin  4  4 Jun 16:20 /usr/local/bin/snip -> /folder/installed/snip-cli/snip
-```
-
-3.  Delete the symlink in the first folder. If your user account already has write permission to this folder, you don't need to use `sudo`.
-
-```sh
-$ sudo rm /usr/local/bin/snip
-```
-
-4.  Delete the main installation folder.
-
-```sh
-$ rm -rf /folder/installed/snip-cli
-```
-
-### Linux manual install
-
-1.  Download the tarball using the `curl` command. The `-o` option specifies the file name that the downloaded tarball is written to. In this example, the file is written to `snip.tar.gz` in the current directory.
-
-```sh
-$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.39/snip-linux-x64.tar.gz -o snip.tar.gz
-```
-
-NOTE: You can install to any directory, or choose the recommended `/usr/local/snip-cli`.
-
-To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.39).
-
-```sh
-$ shasum -a 256 snip.tar.gz
-```
-
-2.  Extract the binary.
-
-```sh
-$ tar -xf snip.tar.gz
-```
-
-3.  Create a symlink to the user's `bin` directory.
-
-```sh
-$ sudo ln -sf snip /usr/local/bin/snip
-```
-
-NOTE: You must have write permissions to the specified directory. Creating a symlink to a directory that is already in your path eliminates the need to add the install directory to the user's `$PATH` variable.
-
-4.  Verify the installation.
-
-Assuming `/usr/local/bin` is on your `PATH`, you can now run:
-
-```sh
-$ snip --version
-```
-
-#### Uninstall
-
-1.  Find the directory that contains the symlink to the main binary.
-
-```sh
-$ which snip
-/usr/local/bin/snip
-```
-
-2.  Using that information, run the following command to find the installation directory that the symlink points to.
-
-```sh
-$ ls -l /usr/local/bin/snip
-lrwxr-xr-x  1 user  admin  4  4 Jun 16:20 /usr/local/bin/snip -> /directory/installed/snip-cli/snip
-```
-
-3.  Delete the symlink in the first directory. If your user account already has write permission to this directory, you don't need to use `sudo`.
-
-```sh
-$ sudo rm /usr/local/bin/snip
-```
-
-4.  Delete the main installation directory.
-
-```sh
-$ rm -rf /directory/installed/snip-cli
-```
+Our platform is built on AWS, using 100% serverless architecture. We rely heavily on Lambda, so you may occasionally experience what's called a "cold start". Another reason your requests might be taking slightly longer is if you're not in Europe. We're currently only deployed in eu-west-1 (Ireland), however we plan to deploy in 2 additional regions soon.
 
 ## License
 
