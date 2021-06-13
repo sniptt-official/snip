@@ -10,8 +10,8 @@ import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
-export const command: string = 'add [name] [value]';
-export const desc: string = 'Add end-to-end encrypted secret to vault';
+export const command = 'add [name] [value]';
+export const desc = 'Add end-to-end encrypted secret to vault';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -57,7 +57,7 @@ export const handler: Handler = async (argv) => {
 
   const userConfig = await readUserConfig(profile);
 
-  let { name: secretName = await getSecretName({ file }) } = argv;
+  const { name: secretName = await getSecretName({ file }) } = argv;
 
   const { content, contentType } = await getBinaryValue({ file, value });
 

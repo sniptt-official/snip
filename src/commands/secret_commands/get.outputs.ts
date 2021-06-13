@@ -17,7 +17,7 @@ export const secretRetrieved = ({
   vaultName: string | undefined;
   json: boolean | undefined;
   out: string | undefined;
-}) => {
+}): never => {
   if (typeof out === 'string') {
     const fileName = out === '' ? secretName : out;
     writeFileSync(fileName, secretContent);

@@ -12,7 +12,7 @@ export const listVaultMemberships = ({
     VaultOwnerAccountName: string;
   }>;
   json: boolean | undefined;
-}) => {
+}): never => {
   if (json) {
     process.stdout.write(JSON.stringify(vaultMemberships, null, 2));
     process.exit(0);

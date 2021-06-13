@@ -13,7 +13,7 @@ export const listVaultSecrets = ({
     SecretOwnerAccountEmail: string;
   }>;
   json: boolean | undefined;
-}) => {
+}): never => {
   if (json) {
     process.stdout.write(JSON.stringify(vaultSecrets, null, 2));
     process.exit(0);

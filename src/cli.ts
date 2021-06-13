@@ -1,42 +1,27 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
-import { RequestError } from 'got';
-import { EOL } from 'os';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import handleError from './handleError';
+
 yargs(hideBin(process.argv))
+  // Use the commands directory to scaffold.
   .commandDir('commands')
+  // Default command if none supplied - shows help.
   .command(
     '$0',
-    'Sniptt CLI usage',
-    () => {},
+    'The Snip CLI usage',
+    () => undefined,
     () => {
       yargs.showHelp();
     },
   )
-  .help('h')
-  .alias('h', 'help')
-  .fail((message, error) => {
-    if (message) {
-      process.stderr.write(chalk.red(message) + EOL);
-      process.exit(1);
-    }
-
-    let errorMessage =
-      'Unknown error occurred, please contact support@sniptt.com';
-
-    if (error instanceof RequestError) {
-      const errorDetails = error.response?.body;
-
-      if (typeof errorDetails === 'string') {
-        errorMessage = errorDetails;
-      }
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-
-    process.stderr.write(chalk.red(errorMessage) + EOL);
-    process.exit(1);
-  }).argv;
+  // Enable strict mode.
+  .strict()
+  // Useful aliases.
+  .alias({ h: 'help' })
+  // Be nice.
+  .epilogue('For more information, check https://sniptt.com')
+  // Handle failures.
+  .fail(handleError).argv;

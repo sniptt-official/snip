@@ -8,6 +8,6 @@ export type Options = BaseOptions & {
   role: 'read' | 'admin';
 };
 
-export type Builder = CommandBuilder<{}, Options>;
+export type Builder = CommandBuilder<Options, Options>;
 
 export type Handler = (argv: Arguments<Options>) => PromiseLike<void>;

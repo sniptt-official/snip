@@ -8,7 +8,7 @@ export const oneTimeSecretCreated = ({
   oneTimeSecretId: string;
   token: string;
   json: boolean | undefined;
-}) => {
+}): never => {
   const oneTimeSecretUrl = `https://secure.sniptt.com/view?id=${oneTimeSecretId}&token=${token}`;
 
   if (json) {

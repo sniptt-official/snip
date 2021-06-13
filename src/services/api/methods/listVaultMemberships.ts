@@ -3,7 +3,7 @@ import client from '../httpClient';
 import { Header, ProtectedApiCallOpts } from '../types';
 import { validateResponseAttributes } from '../validators';
 
-type Params = {};
+type Params = Record<string, never>;
 
 const ResponseSchema = object({
   Role: string().required(),

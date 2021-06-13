@@ -40,6 +40,7 @@ export const confirmVaultId = async ({
         // for relevant example. Had to dig in to get to the bottom of this.
         // If we do not do this, it's pretty much impossible to maintain
         // user-friendly display names in options and confirms.
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return this.map(res);
       },

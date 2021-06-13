@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-export const welcome = () => {
+export const welcome = (): void => {
   const welcomeAsciiText = Buffer.from(
     'ICAgICAgICAgICAgICAgIOKWhOKWhCAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIOKWgOKWgCAgICAgICAgICAgIOKWn+KWiCAgIOKWl+KWiOKWjCAgCiDiloTilp/ilpviloDilowg4paI4paI4paZ4paf4paI4paI4paEICDilojiloggIOKWnuKWiOKWmeKWhOKWiOKWiOKWhOKWluKWneKWiOKWiOKWiOKWgOKWmOKWnOKWiOKWiOKWm+KWgCAKIOKWgOKWiOKWiOKWmeKWhCDilojilojilpsgIOKWiOKWiOKWjCDilojiloggIOKWnuKWiOKWiCAg4pae4paI4paIIOKWnuKWiOKWiCAgIOKWiOKWiOKWjCAgCiDilpfiloTiloTilojilpsg4paI4paI4paMICDilojilojilowg4pac4paI4paI4paM4pae4paI4paI4pac4paI4paI4pab4paYIOKWneKWiOKWiOKWiOKWjCDilpzilojilojilpkgCiAgICAgICAgICAgICAgICAgICAg4pae4paI4pabICAgICAgICAgICAgICAgICA=',
     'base64',
@@ -18,7 +18,7 @@ Instead, share and read secrets without leaving your terminal or IDE.
 `);
 };
 
-export const userConfigFound = (profile: string) => {
+export const userConfigFound = (profile: string): Promise<never> => {
   process.stdout.write(`
 The profile ${chalk.cyan(profile)} is already configured! 👌
 
@@ -33,7 +33,7 @@ If you would like to configure a new profile, run the following:
   process.exit(0);
 };
 
-export const deviceConfigured = async (configPath: string) => {
+export const deviceConfigured = async (configPath: string): Promise<never> => {
   process.stdout.write(`
 ✨ Configuration written to ${chalk.cyan(configPath)}.
 

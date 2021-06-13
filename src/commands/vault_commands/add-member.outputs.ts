@@ -12,7 +12,7 @@ export const memberAdded = ({
   vaultName: string;
   vaultEncryptedPrivateKey: string;
   json: boolean | undefined;
-}) => {
+}): never => {
   if (json) {
     process.stdout.write(
       JSON.stringify(

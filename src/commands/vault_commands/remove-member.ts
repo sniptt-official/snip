@@ -8,8 +8,8 @@ import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 
-export const command: string = 'remove-member <name>';
-export const desc: string = 'Remove member from vault';
+export const command = 'remove-member <name>';
+export const desc = 'Remove member from vault';
 
 export const builder: Builder = (yargs) =>
   yargs
