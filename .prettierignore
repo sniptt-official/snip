@@ -6,4 +6,4 @@ node_modules
 coverage
 
 # TypeScript build
-lib
+build
