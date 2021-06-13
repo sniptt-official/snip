@@ -371,6 +371,81 @@
       "response": []
     },
     {
+      "name": "Search vault memberships",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(jsonData.length).to.eql(1)",
+              "",
+              "    const [vault] = jsonData;",
+              "    ",
+              "    pm.expect(vault).to.eql({",
+              "        Role: 'Owner',",
+              "        VaultId: pm.environment.get('personal_vault_id'),",
+              "        VaultName: 'Personal',",
+              "        VaultOwnerAccountId: pm.environment.get('account_id'),",
+              "        VaultOwnerAccountEmail: pm.environment.get('account_email'),",
+              "        VaultOwnerAccountName: pm.environment.get('account_name')",
+              "    })",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"VaultName\": \"Personal\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/searchVaultMemberships",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["searchVaultMemberships"]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Create vault",
       "event": [
         {
@@ -434,6 +509,70 @@
           "protocol": "https",
           "host": ["{{api_base_uri}}"],
           "path": ["createVault"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search vault memberships",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(jsonData.length).to.eql(0)",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"VaultName\": \"{{vault_id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/searchVaultMemberships",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["searchVaultMemberships"]
         }
       },
       "response": []
