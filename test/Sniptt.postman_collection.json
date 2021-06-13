@@ -1,0 +1,709 @@
+{
+  "info": {
+    "_postman_id": "7b675d7c-be57-4ae6-ba91-25cda159f7da",
+    "name": "Sniptt",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Send email verification code",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 202\", function () {",
+              "    pm.response.to.have.status(202);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const textData = pm.response.text();",
+              "",
+              "    pm.expect(textData).to.eql(\"\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"account_email\", pm.variables.replaceIn(\"roger+sniptt+{{$guid}}@sniptt.com\"));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"Email\": \"{{account_email}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/sendEmailVerificationCode",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["sendEmailVerificationCode"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register device",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(typeof jsonData.ApiKey === 'string').to.eql(true);",
+              "    pm.expect(typeof jsonData.AccountId === 'string').to.eql(true);",
+              "    pm.expect(typeof jsonData.DeviceId === 'string').to.eql(true);",
+              "    pm.expect(jsonData.IsAccountConfigured).to.eql(false);",
+              "",
+              "    pm.environment.set(\"api_key\", jsonData.ApiKey);",
+              "    pm.environment.set(\"account_id\", jsonData.AccountId);",
+              "    pm.environment.set(\"device_id\", jsonData.DeviceId);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"Email\": \"{{account_email}}\",\n    \"Code\": \"Z9RcbSuc\",\n    \"DeviceName\": \"Postman\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/registerDevice",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["registerDevice"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Retrieve account configuration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// TODO: Change to 404?",
+              "pm.test(\"Status code is 500\", function () {",
+              "    pm.response.to.have.status(500);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(jsonData.ErrorMessage).to.eql('account configuration not found');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"AccountId\": \"{{account_id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/retrieveAccountConfiguration",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["retrieveAccountConfiguration"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Configure account",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(jsonData.AccountId).to.eql(pm.environment.get(\"account_id\"));",
+              "    pm.expect(typeof jsonData.PersonalVaultId).to.eql(\"string\");",
+              "",
+              "    pm.environment.set(\"personal_vault_id\", jsonData.PersonalVaultId);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"account_name\", \"Postman test account 👋\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"AccountName\": \"{{account_name}}\",\n    \"AccountPublicKey\": \"-----BEGIN PGP PUBLIC KEY BLOCK-----\\n\\nxjMEYJ7IFhYJKwYBBAHaRw8BAQdAh9k+tdBmKAkBfdyyL/hbW9Y5y0GLwKHw\\nK/x3gjBiecjNKFBvc3RtYW4gPHB1YmxpYytzbmlwdHRAc2xhdm92b2phY2Vr\\nLmNvbT7CjAQQFgoAHQUCYJ7IFgQLCQcIAxUICgQWAgEAAhkBAhsDAh4BACEJ\\nEAHRQ1MVD1HaFiEEE1KTGNEcK0iaMHwpAdFDUxUPUdo1JQEAoMURP9z5PDJk\\n5jWvulu+vhsr0gv+ZjzgRAGWo2ATGrkBAOzbOenrQJVC0FCsC0Qs7ds8MVBZ\\nu/GheglcDyJr44sPzjgEYJ7IFhIKKwYBBAGXVQEFAQEHQNmMj0YkfSVvvnzU\\nxwAdENU/mrbSpP5CPZxs5XTptPUgAwEIB8J4BBgWCAAJBQJgnsgWAhsMACEJ\\nEAHRQ1MVD1HaFiEEE1KTGNEcK0iaMHwpAdFDUxUPUdoCeQEA7s8dRtTuRa1D\\nye78dWnPUuC04xXVke+lo53HUr5ZoJMBAMU6yWPGcCR+nvF9nqTBZWelP7UJ\\niwESDI8DS9JFEyMH\\n=bkiV\\n-----END PGP PUBLIC KEY BLOCK-----\\n\",\n    \"AccountEncryptedPrivateKey\": \"-----BEGIN PGP MESSAGE-----\\n\\nwx4EBwMIsfGYRBH3HbPgV8igwID92g1BhhBSqxs3LIPSwm0Bxq9ytAA8uulf\\nS1NvOO+7vM8vOu5E8xL7cKy+bYiJZc5wUJGYV76KLyzo4Ns17U41P3kgdP+i\\n8hAXDYo7pV6r3/3YtT3Kh7er/fKW6DqtF4bzgIRnEN0ERBPKubkavW6LhV6c\\nVobecDe7TWjgCEdnMlFxfamORQ7usxuhBEQgOGSowsyGktNIuFc8jv9qaZzD\\nYQeuKsoyrmunAJEQKssg+LJn1HePWkK4dord0VAlNY2l3m277yTLVP3he/hO\\noyghrCCAJvNdP3bPebi+tXSOjZvAIT/fnLmv1OJfz8snC3BgZ5sfDsresYxt\\nQ2bjLDeZO+T+AIvgqdNawEfiH9i4L4XzgEHT3D+S2yKVOZOXCR6Qp8cv4AA6\\nZ9vdMpY6ambGXZ+ETK3YYoGp+xY/qCbZ7tjTbhfAycUgDVXtQHTblI4g0AE0\\nVq6NeVbwiNbP2svs2YSJAMzkcM1rjbfcNcg0fxFMnYYuXMA4/qne3PB+E/FP\\njhGzQ2nvIJNBWTi5UtAmaI7kcNN9o3HKO5uhIQbVPMrcPRhdy2/FWKmIRYKg\\nivQOZFnp6KOzW+11IK/20FbzTXySOY1EIf50BZ/m4qJtary5MZEyrpIQDHpV\\nFe6P7vjXD0eQXNuFfEzuG1FIp11OKSVTqPshjGFp3j0X1/2pTu1S3htACg4i\\nL58+8eWSKNj5ZIAF1F3dnj1g/LwVZTG/vGR8g7ZBMDKlqkiZ2qlmInYx1EyQ\\nb1sMussoGYBFgEXXHr7Ou/HmUWcPHeWd1P5I3np30mt6szdd3rhwilP1gwZp\\nzC7m/6i6FZtNhajtiUQ9i7Vuw4EiWuQxF/9ZSya9Ucp4LkT6PPyP2k0cRxu0\\nnhtjbWCrN/pcfN1rJn6LRvvOMIQ6BdkfohXYmD+vJn9U8FJHta9+8pwGiXlK\\nJd+3xmnO/U+8qg/HhX2yJPIQqhmOCvDnjzgTJpPd/pDr8B8gHkLarvv4rQRf\\nN+16yT7kDnw9FDauGdGwSPoOPhnHIo2jHjOzdJQFUpfzNhky7GE4SOojxCMk\\nXMJ8VxlTpWEftvIAhwSkQ3AR3aQqqIw1BpRVkUGoatYLsp36k9o=\\n=UmO+\\n-----END PGP MESSAGE-----\\n\",\n    \"AccountEncryptionKeySalt\": \"TyyPNh63hPj1dTv+UKPal+cbc5P/zQYxnTC+4SFr730tgjyps6yM6EXyG0tssIUq1Xjb7n6yU6xjwPxS78aFyA==\",\n    \"PersonalVaultPublicKey\": \"-----BEGIN PGP PUBLIC KEY BLOCK-----\\n\\nxjMEYJ7IFhYJKwYBBAHaRw8BAQdAkask+Itx6WGHkS9MuCjziA57a99Cduyh\\nAYi+JRaOxtHNKFBvc3RtYW4gPHB1YmxpYytzbmlwdHRAc2xhdm92b2phY2Vr\\nLmNvbT7CjAQQFgoAHQUCYJ7IFgQLCQcIAxUICgQWAgEAAhkBAhsDAh4BACEJ\\nED/VfqD2BMRfFiEEXMPtIP0p9gxl63ShP9V+oPYExF/3RAEA/o8GahXEzM5E\\nNNDjWSes7Mvpmla+bsHqrimUhNGtumcA/A4paBAp8YDAIUxj9CkF9xdgraoM\\n/KnmKG3HVT7fKz4EzjgEYJ7IFhIKKwYBBAGXVQEFAQEHQMyXJcTPwNR7rxAU\\nF6kEbBvAh0R8Cb8vrBGH0iiOCD01AwEIB8J4BBgWCAAJBQJgnsgWAhsMACEJ\\nED/VfqD2BMRfFiEEXMPtIP0p9gxl63ShP9V+oPYExF8HiAD9HGKyIbgBrPW0\\nb7wNgW3QlOcB5XKwGMPRdU07b/gPXRoA/jhDsLpfqyNhVGC6cxEd3gd+Lhvs\\n1WWfV2wvd+J+QS8C\\n=Xavw\\n-----END PGP PUBLIC KEY BLOCK-----\\n\",\n    \"PersonalVaultEncryptedPrivateKey\": \"-----BEGIN PGP MESSAGE-----\\n\\nwV4Dr8VgDvoi+DoSAQdAI0FphMczaLGGtMsN041ISyV+l3AyzL3qMn1o+Xb4\\nvRQwvhlo0TyXIewxT7IJFDJBe8E7nJMFq12pfmlSqFf8JqgxBihDaUJDLPhT\\njWRCawen0sJtARZt5SzC/w6w4fTBDtd8e7zbF+ue8sxZkGX2dUW+++p1CbZF\\nzKA9kYN5QNJduRkChijlTPTzm/NPGBP3sL1y+24lN0SHVyWi98Xq8vmH0CX/\\nZNL+S1c8PtvRmR0DowCunTXJFqyzxb1N9P7tFa9aQgauvWYewagCFY35Xhvd\\nZoWvx8Zjz94YFDlznLKb9uYOJV1rawHAEbXczD1hEUz0LyXQo7mSNXB+p8z9\\nYCncttY9/3YU6rhhuTPXV9udBEcZ0GZh418fyCjluffT3nioBwJg/7D0M7az\\nsM8UglMgovVoZ3sbcqHC8RGGpGVKRTkwOAibzNTfgSfozY99YpAC/uR+bdWM\\n2x4qgS5XCOVzjHw7a0cCbS/26t5Rl5bJuCLltlchSPGxU4z8rBLa3++i2Lps\\npB2mUVPSZRBKfb+X3sNLGdKTzBo+3geMN7BiwECx8THBe24s/M5yIPqaRTvC\\nivcHEXCx8ONMSamBKdVUn0NWBQQVT/uVFbD9LBapLpouFuyssFjLW5UTUdR3\\nlsf1Poz9p19UR3eU3BohcuaQ/izNefmMPfZ6b/xEg7capBqtMAgQmL4E9xbt\\n48CWKAVvgleXrqgKNEWKMvOtshh13q5PSEeLPGXQTckInscNrzD8rFBhlOfm\\nNOTDOC6QA/KuBepdQ7TgmnIpcZg3ly+ruLq4NuR6yXkK2BufVCyCks0AstEr\\n+SKKf/4WDPuNqZbr9RFpFFyFE7SZpMG3Xuxraj7zGxWgJoBmrojscQCVBNdx\\ntQWhv224EVFhxRKFfi9eoZGHbmLGCp6D8SvGT84BrEIKSRPH/M1AHoXCDRug\\najRrgBXAwFB1nCp+63SMgrZK3eSQc/klHTQWrbh3eDpa3Ha0FhtF4EECJkfe\\nRk3Q4EkrCNow3+Q3jq6jvqVCIc1wjGO3dE534eQbl8/tQd2UO7vEU7qCPK6n\\nbEX4ViPCbqE2OjaaD+H2g7QAvdGqEIqzuP7hM6HphgLhWE2cdjILSWSvvdiK\\nF4qG5mi6yzEzgyM4yqPIFBYiUncOI1Gr0TEiT/+KWiIG1RoXdJrCt1xWjX1R\\ns/d8KenaBvN/4dze\\n=ttli\\n-----END PGP MESSAGE-----\\n\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/configureAccount",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["configureAccount"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Retrieve account configuration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(jsonData.AccountId).to.eql(pm.environment.get('account_id'));",
+              "    pm.expect(jsonData.AccountEmail).to.eql(pm.environment.get('account_email'));",
+              "    pm.expect(jsonData.AccountName).to.eql(pm.environment.get('account_name'));",
+              "    pm.expect(jsonData.AccountTier).to.eql('Free');",
+              "    // pm.expect(jsonData.AccountPublicKey).to.eql(pm.environment.get('...'));",
+              "    pm.expect(typeof jsonData.AccountPublicKey).to.eql('string');",
+              "    // pm.expect(jsonData.AccountEncryptedPrivateKey).to.eql(pm.environment.get('...'));",
+              "    pm.expect(typeof jsonData.AccountEncryptedPrivateKey).to.eql('string');",
+              "    // pm.expect(jsonData.AccountEncryptionKeySalt).to.eql(pm.environment.get('...'));",
+              "    pm.expect(typeof jsonData.AccountEncryptionKeySalt).to.eql('string');",
+              "    // pm.expect(jsonData.PersonalVaultId).to.eql(pm.environment.get('...'));",
+              "    pm.expect(typeof jsonData.PersonalVaultId).to.eql('string');",
+              "    // pm.expect(jsonData.PersonalVaultPublicKey).to.eql(pm.environment.get('...'));",
+              "    pm.expect(typeof jsonData.PersonalVaultPublicKey).to.eql('string');",
+              "    // pm.expect(jsonData.PersonalVaultEncryptedPrivateKey).to.eql(pm.environment.get('...'));",
+              "    pm.expect(typeof jsonData.PersonalVaultEncryptedPrivateKey).to.eql('string');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"AccountId\": \"{{account_id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/retrieveAccountConfiguration",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["retrieveAccountConfiguration"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List account vaults",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    const personalVault = jsonData.find(({ VaultId }) => VaultId === pm.environment.get('personal_vault_id'))",
+              "",
+              "    pm.expect(personalVault).to.eql({",
+              "        Role: 'Owner',",
+              "        VaultId: pm.environment.get('personal_vault_id'),",
+              "        VaultName: 'Personal',",
+              "        VaultOwnerAccountId: pm.environment.get('account_id'),",
+              "        VaultOwnerAccountEmail: pm.environment.get('account_email'),",
+              "        VaultOwnerAccountName: pm.environment.get('account_name'),",
+              "    })",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/listVaultMemberships",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["listVaultMemberships"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create vault",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(typeof jsonData.VaultId).to.eql('string');",
+              "",
+              "    pm.environment.set(\"vault_id\", jsonData.VaultId);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set('vault_name', pm.variables.replaceIn('{{$randomColor}}-{{$randomAdjective}}-{{$randomNoun}}'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"VaultName\": \"{{vault_name}}\",\n    \"VaultPublicKey\": \"-----BEGIN PGP PUBLIC KEY BLOCK-----\\n\\nxjMEYJ7IFhYJKwYBBAHaRw8BAQdAh9k+tdBmKAkBfdyyL/hbW9Y5y0GLwKHw\\nK/x3gjBiecjNKFBvc3RtYW4gPHB1YmxpYytzbmlwdHRAc2xhdm92b2phY2Vr\\nLmNvbT7CjAQQFgoAHQUCYJ7IFgQLCQcIAxUICgQWAgEAAhkBAhsDAh4BACEJ\\nEAHRQ1MVD1HaFiEEE1KTGNEcK0iaMHwpAdFDUxUPUdo1JQEAoMURP9z5PDJk\\n5jWvulu+vhsr0gv+ZjzgRAGWo2ATGrkBAOzbOenrQJVC0FCsC0Qs7ds8MVBZ\\nu/GheglcDyJr44sPzjgEYJ7IFhIKKwYBBAGXVQEFAQEHQNmMj0YkfSVvvnzU\\nxwAdENU/mrbSpP5CPZxs5XTptPUgAwEIB8J4BBgWCAAJBQJgnsgWAhsMACEJ\\nEAHRQ1MVD1HaFiEEE1KTGNEcK0iaMHwpAdFDUxUPUdoCeQEA7s8dRtTuRa1D\\nye78dWnPUuC04xXVke+lo53HUr5ZoJMBAMU6yWPGcCR+nvF9nqTBZWelP7UJ\\niwESDI8DS9JFEyMH\\n=bkiV\\n-----END PGP PUBLIC KEY BLOCK-----\\n\",\n    \"VaultEncryptedPrivateKey\": \"-----BEGIN PGP MESSAGE-----\\n\\nwx4EBwMIsfGYRBH3HbPgV8igwID92g1BhhBSqxs3LIPSwm0Bxq9ytAA8uulf\\nS1NvOO+7vM8vOu5E8xL7cKy+bYiJZc5wUJGYV76KLyzo4Ns17U41P3kgdP+i\\n8hAXDYo7pV6r3/3YtT3Kh7er/fKW6DqtF4bzgIRnEN0ERBPKubkavW6LhV6c\\nVobecDe7TWjgCEdnMlFxfamORQ7usxuhBEQgOGSowsyGktNIuFc8jv9qaZzD\\nYQeuKsoyrmunAJEQKssg+LJn1HePWkK4dord0VAlNY2l3m277yTLVP3he/hO\\noyghrCCAJvNdP3bPebi+tXSOjZvAIT/fnLmv1OJfz8snC3BgZ5sfDsresYxt\\nQ2bjLDeZO+T+AIvgqdNawEfiH9i4L4XzgEHT3D+S2yKVOZOXCR6Qp8cv4AA6\\nZ9vdMpY6ambGXZ+ETK3YYoGp+xY/qCbZ7tjTbhfAycUgDVXtQHTblI4g0AE0\\nVq6NeVbwiNbP2svs2YSJAMzkcM1rjbfcNcg0fxFMnYYuXMA4/qne3PB+E/FP\\njhGzQ2nvIJNBWTi5UtAmaI7kcNN9o3HKO5uhIQbVPMrcPRhdy2/FWKmIRYKg\\nivQOZFnp6KOzW+11IK/20FbzTXySOY1EIf50BZ/m4qJtary5MZEyrpIQDHpV\\nFe6P7vjXD0eQXNuFfEzuG1FIp11OKSVTqPshjGFp3j0X1/2pTu1S3htACg4i\\nL58+8eWSKNj5ZIAF1F3dnj1g/LwVZTG/vGR8g7ZBMDKlqkiZ2qlmInYx1EyQ\\nb1sMussoGYBFgEXXHr7Ou/HmUWcPHeWd1P5I3np30mt6szdd3rhwilP1gwZp\\nzC7m/6i6FZtNhajtiUQ9i7Vuw4EiWuQxF/9ZSya9Ucp4LkT6PPyP2k0cRxu0\\nnhtjbWCrN/pcfN1rJn6LRvvOMIQ6BdkfohXYmD+vJn9U8FJHta9+8pwGiXlK\\nJd+3xmnO/U+8qg/HhX2yJPIQqhmOCvDnjzgTJpPd/pDr8B8gHkLarvv4rQRf\\nN+16yT7kDnw9FDauGdGwSPoOPhnHIo2jHjOzdJQFUpfzNhky7GE4SOojxCMk\\nXMJ8VxlTpWEftvIAhwSkQ3AR3aQqqIw1BpRVkUGoatYLsp36k9o=\\n=UmO+\\n-----END PGP MESSAGE-----\\n\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/createVault",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["createVault"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List account vaults",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    const newVault = jsonData.find(({ VaultId }) => VaultId === pm.environment.get('vault_id'))",
+              "",
+              "    pm.expect(newVault).to.eql({",
+              "        Role: 'Owner',",
+              "        VaultId: pm.environment.get('vault_id'),",
+              "        VaultName: pm.environment.get('vault_name'),",
+              "        VaultOwnerAccountId: pm.environment.get('account_id'),",
+              "        VaultOwnerAccountEmail: pm.environment.get('account_email'),",
+              "        VaultOwnerAccountName: pm.environment.get('account_name'),",
+              "    })",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/listVaultMemberships",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["listVaultMemberships"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create vault",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 402\", function () {",
+              "    pm.response.to.have.status(402);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(jsonData.ErrorMessage).to.eql('Account vault limit reached');",
+              "    pm.expect(jsonData.ErrorCode).to.eql('MaximumVaults');",
+              "    pm.expect(jsonData.Hint).to.eql('Please upgrade your plan');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set('vault_name', pm.variables.replaceIn('{{$randomColor}}-{{$randomAdjective}}-{{$randomNoun}}'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"VaultName\": \"{{vault_name}}\",\n    \"VaultPublicKey\": \"-----BEGIN PGP PUBLIC KEY BLOCK-----\\n\\nxjMEYJ7IFhYJKwYBBAHaRw8BAQdAh9k+tdBmKAkBfdyyL/hbW9Y5y0GLwKHw\\nK/x3gjBiecjNKFBvc3RtYW4gPHB1YmxpYytzbmlwdHRAc2xhdm92b2phY2Vr\\nLmNvbT7CjAQQFgoAHQUCYJ7IFgQLCQcIAxUICgQWAgEAAhkBAhsDAh4BACEJ\\nEAHRQ1MVD1HaFiEEE1KTGNEcK0iaMHwpAdFDUxUPUdo1JQEAoMURP9z5PDJk\\n5jWvulu+vhsr0gv+ZjzgRAGWo2ATGrkBAOzbOenrQJVC0FCsC0Qs7ds8MVBZ\\nu/GheglcDyJr44sPzjgEYJ7IFhIKKwYBBAGXVQEFAQEHQNmMj0YkfSVvvnzU\\nxwAdENU/mrbSpP5CPZxs5XTptPUgAwEIB8J4BBgWCAAJBQJgnsgWAhsMACEJ\\nEAHRQ1MVD1HaFiEEE1KTGNEcK0iaMHwpAdFDUxUPUdoCeQEA7s8dRtTuRa1D\\nye78dWnPUuC04xXVke+lo53HUr5ZoJMBAMU6yWPGcCR+nvF9nqTBZWelP7UJ\\niwESDI8DS9JFEyMH\\n=bkiV\\n-----END PGP PUBLIC KEY BLOCK-----\\n\",\n    \"VaultEncryptedPrivateKey\": \"-----BEGIN PGP MESSAGE-----\\n\\nwx4EBwMIsfGYRBH3HbPgV8igwID92g1BhhBSqxs3LIPSwm0Bxq9ytAA8uulf\\nS1NvOO+7vM8vOu5E8xL7cKy+bYiJZc5wUJGYV76KLyzo4Ns17U41P3kgdP+i\\n8hAXDYo7pV6r3/3YtT3Kh7er/fKW6DqtF4bzgIRnEN0ERBPKubkavW6LhV6c\\nVobecDe7TWjgCEdnMlFxfamORQ7usxuhBEQgOGSowsyGktNIuFc8jv9qaZzD\\nYQeuKsoyrmunAJEQKssg+LJn1HePWkK4dord0VAlNY2l3m277yTLVP3he/hO\\noyghrCCAJvNdP3bPebi+tXSOjZvAIT/fnLmv1OJfz8snC3BgZ5sfDsresYxt\\nQ2bjLDeZO+T+AIvgqdNawEfiH9i4L4XzgEHT3D+S2yKVOZOXCR6Qp8cv4AA6\\nZ9vdMpY6ambGXZ+ETK3YYoGp+xY/qCbZ7tjTbhfAycUgDVXtQHTblI4g0AE0\\nVq6NeVbwiNbP2svs2YSJAMzkcM1rjbfcNcg0fxFMnYYuXMA4/qne3PB+E/FP\\njhGzQ2nvIJNBWTi5UtAmaI7kcNN9o3HKO5uhIQbVPMrcPRhdy2/FWKmIRYKg\\nivQOZFnp6KOzW+11IK/20FbzTXySOY1EIf50BZ/m4qJtary5MZEyrpIQDHpV\\nFe6P7vjXD0eQXNuFfEzuG1FIp11OKSVTqPshjGFp3j0X1/2pTu1S3htACg4i\\nL58+8eWSKNj5ZIAF1F3dnj1g/LwVZTG/vGR8g7ZBMDKlqkiZ2qlmInYx1EyQ\\nb1sMussoGYBFgEXXHr7Ou/HmUWcPHeWd1P5I3np30mt6szdd3rhwilP1gwZp\\nzC7m/6i6FZtNhajtiUQ9i7Vuw4EiWuQxF/9ZSya9Ucp4LkT6PPyP2k0cRxu0\\nnhtjbWCrN/pcfN1rJn6LRvvOMIQ6BdkfohXYmD+vJn9U8FJHta9+8pwGiXlK\\nJd+3xmnO/U+8qg/HhX2yJPIQqhmOCvDnjzgTJpPd/pDr8B8gHkLarvv4rQRf\\nN+16yT7kDnw9FDauGdGwSPoOPhnHIo2jHjOzdJQFUpfzNhky7GE4SOojxCMk\\nXMJ8VxlTpWEftvIAhwSkQ3AR3aQqqIw1BpRVkUGoatYLsp36k9o=\\n=UmO+\\n-----END PGP MESSAGE-----\\n\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/createVault",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["createVault"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add secret",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    pm.expect(typeof jsonData.SecretId).to.eql('string');",
+              "",
+              "    pm.environment.set(\"secret_id\", jsonData.SecretId);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set('secret_name', pm.variables.replaceIn('{{$randomColor}}-{{$randomAdjective}}-{{$randomNoun}}'));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"VaultId\": \"{{personal_vault_id}}\",\n    \"SecretName\": \"{{secret_name}}\",\n    \"SecretContentType\": \"Text\",\n    \"SecretEncryptedContent\": \"-----BEGIN PGP MESSAGE-----\\n\\nwV4Dh8myl+TZx3QSAQdASd4qthm+r5dU0mKEpvpe2enT5xFqRIO47A5iW1gx\\nvUAwfppvcd3WUuFPsV7GliYjiMcyoRmIeaNUGVMWncsdtBLWQtmTSPTGyEGG\\nrURC/3B10sMUAVtTpjGchnRbOdrj+DNdSlFO7z8Gc1DHS/Gbg6DQ7tU8HNjw\\nNNdNDDvinm/6Egncvwa1v2t0oiGy4cRd0wthzvMADG9b/NCV7YLK4DfJR75p\\nv/w17ynXUAKllTz9uZqB8DriOWrgA31AUy76w6GKD3h2b/I0E1wKFhJ1E83A\\nL9N4OphyF3xCxQEISthdXJ7s3jgCPLNNiwAb7hJTKXPPrS6VOpep4h9aal9F\\nNw6HO3JuJrUVSTrLvKLU5unBHZ+UkwMdyXbSagYrn8JsDKf+ldbxVraGMOLf\\nKjKSq9DH12m+w/smqA/DL9UYmYDlnCEBx8JssA3/zuXA15qYX+SPBFje7rMX\\nyK+uAaECajHc8sX2YcAaNGl6P8H5cuQhQcz8HTNBl5ik9SoOlGTCjty1e+am\\nymN7LikcB8x/7dp1x9TQfan79eYqjwfIpEVuOkvTGKYNgvP+KwwSDhWVy58i\\nhqk7URPmOMmunk+7Hjgh0K6SoapuxuKgtKBZlhSM+7EiAHAZxZEjpEzmVOLL\\nRf3xU/dqVl5SX/LlPlSkrdhc0jZEsNW/UDqXKwNg2qZFaht1N08oBafwalmn\\nZ0hJhs7PQyE8ibwyMLGEUA897JXv978oY9zpeMuWjoceeZbCaindAOlsEx/9\\n3CsFB5txZDJChNr0+11Bc2SRtuu1OIkAm0hFY6i5IrL6d0g+i/v7y0QhfmiF\\nhqzdLEH2JaLQwaprPi2i9HML3YcPzaKIfRp9spxDpN4GnIm/l4tD7qO8x+Ro\\nBN63TmRoJPb+vYEfBbcKyCwbcIOBN4BRYyp/VzhiB1MEXw7MOXZS2RF2JvYM\\nYRi2Bz38zbtUD5/yCKwRtzO72aQhIvbp98q7WI8pfzdj7O1ihS0EfpY4JVsM\\nurTnv/LbVA875XLSZqYntqCDz2l3tI9pN2D4yWNJJFtefTfDW1sBDt+q/vYe\\nT9f00r34rIPODm0amysA+NZ/GMB/KPTaIiKaeVuy8pCkH5p4t30rPd62CnOv\\n20+IJb86gMT4LY7J/byZAcdb74aAuUMdULaflIKr/pq2r79IJLIlDSDTnz2o\\nWjTyPZB21zQnRwnumyaEt2PEKT2zUvQN6i7lzUYWluUHvWbR5yY+iRiX+L0Y\\nFVdGLJn59wcqOhvz/rUTHF7R2Uyaa503b0gU+xRhX/BIsTtju49klsd+QAMs\\nCd2WZIylnMlh4LbJ8PCg4AMO4FlqFIcNlacZ8nC2NgdkDgDneCR7JSeH96qt\\nZ4hbtjZkjd4+9Gm92A8XoNNSPUsAfPn0/hxyS+/N2F+EF2RDXV9GhMc3otc=\\n=br+n\\n-----END PGP MESSAGE-----\\n\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/addSecret",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["addSecret"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List secrets",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is valid\", function () {",
+              "    const jsonData = pm.response.json();",
+              "",
+              "    const newSecret = jsonData.find(({ SecretId }) => SecretId === pm.environment.get('secret_id'))",
+              "",
+              "    pm.expect(newSecret).to.eql({",
+              "        SecretId: pm.environment.get('secret_id'),",
+              "        SecretName: pm.environment.get('secret_name'),",
+              "        SecretOwnerAccountId: pm.environment.get('account_id'),",
+              "        SecretOwnerAccountName: pm.environment.get('account_name'),",
+              "        SecretOwnerAccountEmail: pm.environment.get('account_email'),",
+              "    })",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "{{api_key}}",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"VaultId\": \"{{personal_vault_id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{api_base_uri}}/listVaultSecrets",
+          "protocol": "https",
+          "host": ["{{api_base_uri}}"],
+          "path": ["listVaultSecrets"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
