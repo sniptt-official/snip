@@ -28,8 +28,8 @@
     *   [Read secrets](#read-secrets)
     *   [Vaults](#vaults)
     *   [Sharing](#sharing)
-*   [Usage Limits](#usage-limits)
 *   [FAQ](#faq)
+    *   [Is Snippt free?](#is-snippt-free)
     *   [Who can access my secrets?](#who-can-access-my-secrets)
     *   [Why does it sometimes take longer to fulfill a request?](#why-does-it-sometimes-take-longer-to-fulfill-a-request)
 *   [License](#license)
@@ -155,7 +155,9 @@ $ snip share --file .env.local
 
 For advanced usage, type `$ snip share -h`.
 
-## Usage Limits
+## FAQ
+
+### Is Snippt free?
 
 Sniptt is **free** for personal use with the following limits:
 
@@ -163,9 +165,7 @@ Sniptt is **free** for personal use with the following limits:
 *   Up to 100 URL shares per month
 *   1 additional Vault (up to 3 members)
 
-To increase limits and access more features, please email us at support@sniptt.com.
-
-## FAQ
+To increase limits and access more features, please email us at <support@sniptt.com>.
 
 ### Who can access my secrets?
 

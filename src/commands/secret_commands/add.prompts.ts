@@ -41,7 +41,7 @@ export const confirmSecretName = async (): Promise<string> => {
 };
 
 export const confirmSecretValue = async (): Promise<string> => {
-  const secretValueSchema = yup.string().max(10_000).required();
+  const secretValueSchema = yup.string().max(100_000).required();
 
   const { secretValue } = await prompt<{ secretValue: string }>({
     type: 'invisible',

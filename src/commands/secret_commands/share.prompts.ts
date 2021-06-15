@@ -6,7 +6,7 @@ import crypto from '../../services/crypto';
 import { getAccountEncryptionKey } from '../../services/keychain';
 
 export const confirmSecretValue = async (): Promise<string> => {
-  const secretValueSchema = yup.string().max(10_000).required();
+  const secretValueSchema = yup.string().max(100_000).required();
 
   const { secretValue } = await prompt<{ secretValue: string }>({
     type: 'invisible',

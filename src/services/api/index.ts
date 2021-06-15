@@ -3,6 +3,7 @@ import addSecret from './methods/addSecret';
 import configureAccount from './methods/configureAccount';
 import createOneTimeSecret from './methods/createOneTimeSecret';
 import createVault from './methods/createVault';
+import deleteSecret from './methods/deleteSecret';
 import listVaultMembers from './methods/listVaultMembers';
 import listVaultMemberships from './methods/listVaultMemberships';
 import listVaultSecrets from './methods/listVaultSecrets';
@@ -21,6 +22,7 @@ export default {
   configureAccount,
   createOneTimeSecret,
   createVault,
+  deleteSecret,
   listVaultMembers,
   listVaultMemberships,
   listVaultSecrets,

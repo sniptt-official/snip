@@ -41,8 +41,8 @@ export const builder: Builder = (yargs) =>
         contentLength = 0;
       }
 
-      if (contentLength > 10_000) {
-        throw new Error('size of input binary cannot exceed 10kB');
+      if (contentLength > 100_000) {
+        throw new Error('size of input binary cannot exceed 100kB');
       }
 
       return argv;
