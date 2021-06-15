@@ -30,6 +30,7 @@
   "bugs": "https://github.com/sniptt-official/snip-cli/issues",
   "scripts": {
     "test": "ava",
+    "test:coverage": "nyc ava",
     "build": "tsc",
     "package:linux": "pkg . --no-bytecode --targets node14-linux-x64 --output bin/linux/snip",
     "package:macos": "pkg . --no-bytecode --targets node14-macos-x64 --output bin/macos/snip",
@@ -64,6 +65,7 @@
     "eslint": "7.28.0",
     "eslint-config-prettier": "8.3.0",
     "faker": "5.5.3",
+    "nyc": "15.1.0",
     "pkg": "5.2.1",
     "prettier": "2.3.0",
     "ts-node": "10.0.0",

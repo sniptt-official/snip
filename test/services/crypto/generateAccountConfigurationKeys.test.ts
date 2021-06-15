@@ -36,8 +36,6 @@ test('generate account and personal vault keys', async (t) => {
     ).data,
   });
 
-  t.is(accountPublicKey.getAlgorithmInfo().curve, params.curve);
-  t.is(accountPrivateKey.getAlgorithmInfo().curve, params.curve);
   t.deepEqual(accountPublicKey.getUserIDs(), [userId]);
   t.deepEqual(accountPrivateKey.getUserIDs(), [userId]);
 
@@ -56,8 +54,6 @@ test('generate account and personal vault keys', async (t) => {
     ).data,
   });
 
-  t.is(personalVaultPublicKey.getAlgorithmInfo().curve, params.curve);
-  t.is(personalVaultPrivateKey.getAlgorithmInfo().curve, params.curve);
   t.deepEqual(personalVaultPublicKey.getUserIDs(), [userId]);
   t.deepEqual(personalVaultPrivateKey.getUserIDs(), [userId]);
 });

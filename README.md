@@ -92,7 +92,7 @@ Add end-to-end encrypted secrets to your personal vault.
 # Add simple key/value.
 $ snip add DB_PASSWORD AYYGR3h64tHp9Bne
 
-# Add simple key/value (you will be prompted using hidden password input)
+# Add simple key/value (you will be prompted using hidden password input).
 $ snip add DB_PASSWORD
 
 # Add file.
