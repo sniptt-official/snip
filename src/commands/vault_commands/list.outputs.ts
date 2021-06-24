@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import Table from 'cli-table';
 import { EOL } from 'os';
 
@@ -15,6 +16,12 @@ export const listVaultMemberships = ({
 }): never => {
   if (json) {
     process.stdout.write(JSON.stringify(vaultMemberships, null, 2));
+    process.exit(0);
+  }
+
+  if (vaultMemberships.length === 0) {
+    // NOTE: This should never really be the case.
+    process.stdout.write(chalk.yellow('No vaults found') + EOL);
     process.exit(0);
   }
 

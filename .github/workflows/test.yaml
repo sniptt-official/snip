@@ -24,7 +24,7 @@ jobs:
       - name: Perform quality checks
         run: |
           npm ci
-          npm run build
           npm run format:check
           npm run lint:check
-          npm test
+          npm run build
+          npm test:ci

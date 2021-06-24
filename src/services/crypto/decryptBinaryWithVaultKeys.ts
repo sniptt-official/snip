@@ -1,9 +1,9 @@
-import { decrypt, Key, readMessage } from 'openpgp';
+import { decrypt, PrivateKey, PublicKey, readMessage } from 'openpgp';
 
 type Params = {
   encryptedContent: string;
-  vaultPublicKey: Key;
-  vaultPrivateKey: Key;
+  vaultPublicKey: PublicKey;
+  vaultPrivateKey: PrivateKey;
 };
 
 export default async ({
@@ -13,10 +13,10 @@ export default async ({
 }: Params): Promise<Buffer> => {
   const { data: binary } = await decrypt({
     message: await readMessage({ armoredMessage: encryptedContent }),
-    privateKeys: [vaultPrivateKey],
+    decryptionKeys: [vaultPrivateKey],
     // NOTE: Below only used for signature verification.
     // Can be used later to verify the signature(s).
-    publicKeys: [vaultPublicKey],
+    verificationKeys: [vaultPublicKey],
     // TODO: Implement as an option.
     // expectSigned: true,
     format: 'binary',

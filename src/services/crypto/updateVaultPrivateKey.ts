@@ -1,14 +1,20 @@
-import { encrypt, createMessage, Key, readKey } from 'openpgp';
+import {
+  encrypt,
+  createMessage,
+  readKey,
+  PublicKey,
+  PrivateKey,
+} from 'openpgp';
 
 type Params = {
   action: 'add' | 'remove';
   existingPublicKeys: Array<string>;
   publicKey: string;
-  vaultPrivateKey: Key;
+  vaultPrivateKey: PrivateKey;
 };
 
 type Response = {
-  publicKeys: Array<Key>;
+  publicKeys: Array<PublicKey>;
   encryptedPrivateKey: string;
 };
 
@@ -31,7 +37,7 @@ export default async (params: Params): Promise<Response> => {
 
   const vaultEncryptedPrivateKey = await encrypt({
     message: await createMessage({ text: vaultPrivateKey.armor() }),
-    publicKeys,
+    encryptionKeys: publicKeys,
     // NOTE: Think about adding signature verification. Might be
     // a bit problematic given vault owners can transfer ownership.
     // privateKeys: [accountPrivateKey],

@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava';
 import { internet, name, random } from 'faker';
-import { readKey, readMessage, decrypt } from 'openpgp';
+import { readKey, readMessage, decrypt, readPrivateKey } from 'openpgp';
 
 import crypto from '../../../src/services/crypto';
 
@@ -27,7 +27,7 @@ test('generate account and personal vault keys', async (t) => {
   const accountEncryptedPrivateKey = await readMessage({
     armoredMessage: accountKeyPair.encryptedPrivateKey,
   });
-  const accountPrivateKey = await readKey({
+  const accountPrivateKey = await readPrivateKey({
     armoredKey: (
       await decrypt({
         message: accountEncryptedPrivateKey,
@@ -49,7 +49,7 @@ test('generate account and personal vault keys', async (t) => {
     armoredKey: (
       await decrypt({
         message: personalVaultEncryptedPrivateKey,
-        privateKeys: [accountPrivateKey],
+        decryptionKeys: [accountPrivateKey],
       })
     ).data,
   });

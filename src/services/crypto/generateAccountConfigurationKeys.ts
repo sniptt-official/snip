@@ -60,7 +60,7 @@ const generateAccountConfigurationKeys = async (
     message: await createMessage({
       text: personalVaultKeyPair.privateKeyArmored,
     }),
-    publicKeys: [
+    encryptionKeys: [
       await readKey({ armoredKey: accountKeyPair.publicKeyArmored }),
     ],
     // NOTE: Think about adding signature verification. Might be

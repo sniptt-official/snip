@@ -3,14 +3,15 @@ import {
   generateKey,
   encrypt,
   createMessage,
-  Key,
+  PublicKey,
+  PrivateKey,
 } from 'openpgp';
 
 type Params = {
   accountEmail: string;
   accountName: string;
-  accountPublicKey: Key;
-  accountPrivateKey: Key;
+  accountPublicKey: PublicKey;
+  accountPrivateKey: PrivateKey;
   curve: EllipticCurveName;
 };
 
@@ -37,7 +38,7 @@ export default async (params: Params): Promise<Response> => {
 
   const vaultEncryptedPrivateKey = await encrypt({
     message: await createMessage({ text: vaultKeyPair.privateKeyArmored }),
-    publicKeys: [accountPublicKey],
+    encryptionKeys: [accountPublicKey],
     // NOTE: Think about adding signature verification. Might be
     // a bit problematic given vault owners can transfer ownership.
     // privateKeys: [accountPrivateKey],

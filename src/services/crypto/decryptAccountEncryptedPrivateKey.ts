@@ -1,4 +1,11 @@
-import { decrypt, readKey, readMessage, Key } from 'openpgp';
+import {
+  decrypt,
+  readKey,
+  readMessage,
+  PublicKey,
+  PrivateKey,
+  readPrivateKey,
+} from 'openpgp';
 
 type Params = {
   accountPublicKey: string;
@@ -10,7 +17,7 @@ export default async ({
   accountPublicKey,
   accountEncryptedPrivateKey,
   accountEncryptionKey,
-}: Params): Promise<{ publicKey: Key; privateKey: Key }> => {
+}: Params): Promise<{ publicKey: PublicKey; privateKey: PrivateKey }> => {
   const { data: privateKey } = await decrypt({
     message: await readMessage({ armoredMessage: accountEncryptedPrivateKey }),
     passwords: [accountEncryptionKey],
@@ -18,6 +25,6 @@ export default async ({
 
   return {
     publicKey: await readKey({ armoredKey: accountPublicKey }),
-    privateKey: await readKey({ armoredKey: privateKey }),
+    privateKey: await readPrivateKey({ armoredKey: privateKey }),
   };
 };

@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import Table from 'cli-table';
 import { EOL } from 'os';
 
@@ -16,6 +17,11 @@ export const listVaultSecrets = ({
 }): never => {
   if (json) {
     process.stdout.write(JSON.stringify(vaultSecrets, null, 2));
+    process.exit(0);
+  }
+
+  if (vaultSecrets.length === 0) {
+    process.stdout.write(chalk.yellow('Vault is empty') + EOL);
     process.exit(0);
   }
 
@@ -56,6 +62,5 @@ export const listVaultSecrets = ({
   );
 
   process.stdout.write(table.toString() + EOL);
-
   process.exit(0);
 };

@@ -1,14 +1,22 @@
 import anyTest, { TestInterface } from 'ava';
 import { randomBytes } from 'crypto';
 import { internet, name, random } from 'faker';
-import { createMessage, encrypt, generateKey, readKey, Key } from 'openpgp';
+import {
+  createMessage,
+  encrypt,
+  generateKey,
+  readKey,
+  readPrivateKey,
+  PrivateKey,
+  PublicKey,
+} from 'openpgp';
 
 import crypto from '../../../src/services/crypto';
 
 type TextContext = {
   accountEncryptionKey: string;
-  accountPublicKey: Key;
-  accountPrivateKey: Key;
+  accountPublicKey: PublicKey;
+  accountPrivateKey: PrivateKey;
   vaultPublicKey: string;
   vaultPrivateKey: string;
   vaultEncryptedPrivateKey: string;
@@ -28,7 +36,7 @@ test.beforeEach(async (t) => {
   t.context.accountPublicKey = await readKey({
     armoredKey: accountKeyPair.publicKeyArmored,
   });
-  t.context.accountPrivateKey = await readKey({
+  t.context.accountPrivateKey = await readPrivateKey({
     armoredKey: accountKeyPair.privateKeyArmored,
   });
 
@@ -40,7 +48,7 @@ test.beforeEach(async (t) => {
 
   const vaultEncryptedPrivateKey = await encrypt({
     message: await createMessage({ text: vaultKeyPair.privateKeyArmored }),
-    publicKeys: [t.context.accountPublicKey],
+    encryptionKeys: [t.context.accountPublicKey],
   });
 
   t.context.vaultPublicKey = vaultKeyPair.publicKeyArmored;
@@ -70,7 +78,7 @@ test('fail to decrypt vault encrypted private key using invalid account private 
   });
 
   const params = {
-    accountPrivateKey: await readKey({
+    accountPrivateKey: await readPrivateKey({
       armoredKey: accountKeyPair.privateKeyArmored,
     }),
     vaultPublicKey: t.context.vaultPublicKey,

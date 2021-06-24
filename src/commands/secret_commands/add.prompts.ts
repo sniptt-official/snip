@@ -1,4 +1,4 @@
-import type { Key } from 'openpgp';
+import type { PrivateKey, PublicKey } from 'openpgp';
 import { prompt } from 'enquirer';
 import {
   uniqueNamesGenerator,
@@ -128,7 +128,7 @@ export const promptForExistingMasterPassword = async ({
   accountEncryptionKeySalt: string;
   useKeychain: boolean;
   profile: string;
-}): Promise<{ accountPublicKey: Key; accountPrivateKey: Key }> => {
+}): Promise<{ accountPublicKey: PublicKey; accountPrivateKey: PrivateKey }> => {
   if (useKeychain) {
     const accountEncryptionKey = await getAccountEncryptionKey({ profile });
 
@@ -146,7 +146,7 @@ export const promptForExistingMasterPassword = async ({
 
   const accountPassphraseSchema = yup.string().min(12).max(256).required();
 
-  let result: { accountPublicKey: Key; accountPrivateKey: Key };
+  let result: { accountPublicKey: PublicKey; accountPrivateKey: PrivateKey };
 
   await prompt<{ existingMasterPassword: string }>({
     type: 'invisible',

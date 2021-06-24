@@ -1,15 +1,23 @@
 import anyTest, { TestInterface } from 'ava';
 import { randomBytes } from 'crypto';
 import { internet, name, random } from 'faker';
-import { createMessage, encrypt, generateKey, readKey, Key } from 'openpgp';
+import {
+  createMessage,
+  encrypt,
+  generateKey,
+  readKey,
+  PublicKey,
+  PrivateKey,
+  readPrivateKey,
+} from 'openpgp';
 
 import crypto from '../../../src/services/crypto';
 
 type TextContext = {
   content: Buffer;
   encryptedContent: string;
-  vaultPublicKey: Key;
-  vaultPrivateKey: Key;
+  vaultPublicKey: PublicKey;
+  vaultPrivateKey: PrivateKey;
 };
 
 const test = anyTest as TestInterface<TextContext>;
@@ -28,13 +36,13 @@ test.beforeEach(async (t) => {
   t.context.vaultPublicKey = await readKey({
     armoredKey: vaultKeyPair.publicKeyArmored,
   });
-  t.context.vaultPrivateKey = await readKey({
+  t.context.vaultPrivateKey = await readPrivateKey({
     armoredKey: vaultKeyPair.privateKeyArmored,
   });
 
   t.context.encryptedContent = await encrypt({
     message: await createMessage({ binary: t.context.content }),
-    publicKeys: [t.context.vaultPublicKey],
+    encryptionKeys: [t.context.vaultPublicKey],
   });
 });
 
@@ -58,8 +66,8 @@ test('fail to decrypt binary using invalid vault keys', async (t) => {
     ...t.context,
     // TODO: Use for signature verification?
     // vaultPublicKey: await readKey(),
-    vaultPrivateKey: await readKey({
-      armoredKey: vaultKeyPair.publicKeyArmored,
+    vaultPrivateKey: await readPrivateKey({
+      armoredKey: vaultKeyPair.privateKeyArmored,
     }),
   };
 
