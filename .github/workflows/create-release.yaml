@@ -80,11 +80,12 @@ jobs:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Build and publish
+      - name: Build and publish to npm registry
+        continue-on-error: true
         run: |
           npm ci
           npm run build
-          npm publish
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -93,7 +94,9 @@ jobs:
           # node-version: '14.x'
           registry-url: 'https://npm.pkg.github.com'
 
-      - run: npm publish
+      - name: Build and publish to GitHub registry
+        continue-on-error: true
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
