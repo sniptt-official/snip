@@ -88,7 +88,7 @@ export const handler: Handler = async (argv) => {
       OneTimeSecretEncryptedContent: encryptedContent,
       OneTimeSecretContentType: contentType === 'file' ? 'File' : 'Text',
     },
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   spinner.succeed();
 

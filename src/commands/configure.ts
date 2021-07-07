@@ -84,7 +84,7 @@ export const handler: Handler = async (argv) => {
 
     const accountConfiguration = await api.retrieveAccountConfiguration(
       {},
-      { ApiKey: apiKey },
+      apiKey,
     );
     spinner.succeed();
 
@@ -155,7 +155,7 @@ export const handler: Handler = async (argv) => {
       PersonalVaultEncryptedPrivateKey:
         keys.personalVaultKeyPair.encryptedPrivateKey,
     },
-    { ApiKey: apiKey },
+    apiKey,
   );
   spinner.succeed();
 

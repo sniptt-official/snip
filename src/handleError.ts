@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import { RequestError } from 'got';
 import { EOL } from 'os';
 
 const printMessage = (message: string) => {
@@ -11,7 +10,7 @@ const printMessage = (message: string) => {
   );
 };
 
-export default (message: string, error: Error): never => {
+export default async (message: string, error: Error): Promise<never> => {
   if (message) {
     printMessage(message);
     process.exit(1);
@@ -19,13 +18,13 @@ export default (message: string, error: Error): never => {
 
   let errorMessage = 'Unknown error occurred';
 
-  if (error instanceof RequestError) {
-    const errorDetails = error.response?.body;
+  if (error instanceof Response) {
+    const { ErrorMessage } = await error.json();
 
-    if (typeof errorDetails === 'string') {
-      errorMessage = errorDetails;
+    if (ErrorMessage) {
+      errorMessage = ErrorMessage;
     }
-  } else if (error instanceof Error) {
+  } else {
     errorMessage = error.message;
   }
 

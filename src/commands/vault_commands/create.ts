@@ -74,7 +74,7 @@ export const handler: Handler = async (argv) => {
       VaultPublicKey: vaultKeyPair.publicKey,
       VaultEncryptedPrivateKey: vaultKeyPair.encryptedPrivateKey,
     },
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   spinner.succeed();
 

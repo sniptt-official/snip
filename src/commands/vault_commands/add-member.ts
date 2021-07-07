@@ -44,14 +44,14 @@ export const handler: Handler = async (argv) => {
   const { AccountPublicKey: counterpartAccountPublicKey } =
     await api.retrieveAccountPublicKey(
       { AccountEmail: email },
-      { ApiKey: userConfig.Account.ApiKey },
+      userConfig.Account.ApiKey,
     );
   spinner.succeed();
 
   spinner.start('Fetching existing vault memberships');
   const vaultMemberships = await api.searchVaultMemberships(
     { VaultName: vaultName },
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   spinner.succeed();
 
@@ -63,11 +63,11 @@ export const handler: Handler = async (argv) => {
   spinner.start(`Fetching vault members for ${vaultName}`);
   const vaultKeys = await api.retrieveVaultKeys(
     { VaultId: vaultId },
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   const vaultMembers = await api.listVaultMembers(
     { VaultId: vaultId },
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   const existingPublicKeys = vaultMembers.map(
     ({ AccountPublicKey }) => AccountPublicKey,
@@ -106,7 +106,7 @@ export const handler: Handler = async (argv) => {
       AccountEmail: email,
       Role: role === 'read' ? 'Read' : 'Admin',
     },
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   spinner.succeed();
 

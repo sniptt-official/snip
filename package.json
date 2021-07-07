@@ -40,12 +40,12 @@
     "lint:check": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
+    "@sniptt/snip-sdk-js": "0.0.5",
     "base64url": "3.0.1",
     "chalk": "4.1.1",
     "cli-table": "0.3.6",
     "enquirer": "2.3.6",
     "fs-extra": "10.0.0",
-    "got": "11.8.2",
     "keytar": "7.7.0",
     "openpgp": "5.0.0-3",
     "ora": "5.4.1",
@@ -55,21 +55,21 @@
   },
   "devDependencies": {
     "@types/cli-table": "0.3.0",
-    "@types/faker": "5.5.6",
-    "@types/fs-extra": "9.0.11",
-    "@types/node": "15.12.2",
-    "@types/yargs": "17.0.0",
-    "@typescript-eslint/eslint-plugin": "4.27.0",
-    "@typescript-eslint/parser": "4.27.0",
+    "@types/faker": "5.5.7",
+    "@types/fs-extra": "9.0.12",
+    "@types/node": "16.0.0",
+    "@types/yargs": "17.0.2",
+    "@typescript-eslint/eslint-plugin": "4.28.2",
+    "@typescript-eslint/parser": "4.28.2",
     "ava": "3.15.0",
-    "eslint": "7.28.0",
+    "eslint": "7.30.0",
     "eslint-config-prettier": "8.3.0",
     "faker": "5.5.3",
     "nyc": "15.1.0",
-    "pkg": "5.2.1",
-    "prettier": "2.3.1",
+    "pkg": "5.3.0",
+    "prettier": "2.3.2",
     "ts-node": "10.0.0",
-    "typescript": "4.3.3"
+    "typescript": "4.3.5"
   },
   "pkg": {
     "scripts": "build/**/*.js"

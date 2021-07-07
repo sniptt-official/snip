@@ -5,12 +5,12 @@ import api from '../../services/api';
 import { readUserConfig } from '../../services/config';
 import crypto from '../../services/crypto';
 import { baseOptions } from '../../shared';
-import * as outputs from './add.outputs';
-import * as prompts from './add.prompts';
-import { Builder, Handler } from './add.types';
+import * as outputs from './update.outputs';
+import * as prompts from './update.prompts';
+import { Builder, Handler } from './update.types';
 
-export const command = 'add [name] [value]';
-export const desc = 'Add end-to-end encrypted secret to vault';
+export const command = 'update [name] [value]';
+export const desc = 'Update existing end-to-end encrypted secret';
 
 export const builder: Builder = (yargs) =>
   yargs
@@ -22,10 +22,12 @@ export const builder: Builder = (yargs) =>
     .positional('name', { type: 'string' })
     .positional('value', { type: 'string', conflicts: 'file' })
     .example([
-      ['$0 add'],
-      ['$0 add DB_PASSWORD 5Fqp2Mrs74Bp1RwSyV --profile project:phoenix'],
-      ['$0 add --file .env.prod --vault devs'],
-      ['$0 add -f alice.csv -v creds:aws -q --json | jq -r .SecretId | pbcopy'],
+      ['$0 update'],
+      ['$0 update DB_PASSWORD 5Fqp2Mrs74Bp1RwSyV --profile project:phoenix'],
+      ['$0 update --file .env.prod --vault devs'],
+      [
+        '$0 update -f alice.csv -v creds:aws -q --json | jq -r .SecretId | pbcopy',
+      ],
     ])
     .check((argv, _options) => {
       const { value, file } = argv;
@@ -104,7 +106,7 @@ export const handler: Handler = async (argv) => {
   spinner.succeed();
 
   spinner.start('Adding secret to vault');
-  const { SecretId: secretId } = await api.addSecret(
+  const { SecretId: secretId } = await api.updateSecret(
     {
       SecretName: secretName,
       SecretEncryptedContent: encryptedContent,

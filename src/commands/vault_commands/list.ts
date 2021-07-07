@@ -33,7 +33,7 @@ export const handler: Handler = async (argv) => {
   spinner.start('Fetching vault memberships');
   const vaultMemberships = await api.listVaultMemberships(
     {},
-    { ApiKey: userConfig.Account.ApiKey },
+    userConfig.Account.ApiKey,
   );
   spinner.succeed();
 
