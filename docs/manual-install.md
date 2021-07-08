@@ -5,12 +5,12 @@
 1.  Download the tarball using the `curl` command. The `-o` option specifies the file name that the downloaded tarball is written to. In this example, the file is written to `snip.tar.gz` in the current folder.
 
 ```sh
-$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.49/snip-macos-x64.tar.gz -o snip.tar.gz
+$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.50/snip-macos-x64.tar.gz -o snip.tar.gz
 ```
 
 NOTE: You can install to any folder, or choose the recommended `/usr/local/snip-cli`.
 
-To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.49).
+To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.50).
 
 ```sh
 $ sha256sum snip.tar.gz
@@ -71,12 +71,12 @@ $ rm -rf /folder/installed/snip-cli
 1.  Download the tarball using the `curl` command. The `-o` option specifies the file name that the downloaded tarball is written to. In this example, the file is written to `snip.tar.gz` in the current directory.
 
 ```sh
-$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.49/snip-linux-x64.tar.gz -o snip.tar.gz
+$ curl -L https://github.com/sniptt-official/snip-cli/releases/download/v0.0.50/snip-linux-x64.tar.gz -o snip.tar.gz
 ```
 
 NOTE: You can install to any directory, or choose the recommended `/usr/local/snip-cli`.
 
-To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.49).
+To verify the integrity of the tarball, run the following command and check that the output matches the one on the relevant [release page](https://github.com/sniptt-official/snip-cli/releases/tag/v0.0.50).
 
 ```sh
 $ shasum -a 256 snip.tar.gz
