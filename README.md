@@ -4,9 +4,7 @@
   </a>
 </p>
 
-<div align="center">
- 🔐 The secret manager that developers love!
-</div>
+<div align="center">🔐 The secret manager that developers love!</div>
 
 ***
 
@@ -19,6 +17,7 @@
 *   [Introduction](#introduction)
 *   [Install](#install)
     *   [Homebrew](#homebrew)
+        *   [Update](#update)
     *   [npm](#npm)
     *   [Manual](#manual)
 *   [Features](#features)
@@ -28,21 +27,28 @@
     *   [Read secrets](#read-secrets)
     *   [Vaults](#vaults)
     *   [Sharing](#sharing)
+*   [Useful reading](#useful-reading)
 *   [FAQ](#faq)
+    *   [Why should I trust you with my secrets?](#why-should-i-trust-you-with-my-secrets)
+    *   [How does sharing work?](#how-does-sharing-work)
+    *   [What data do you store on your backend?](#what-data-do-you-store-on-your-backend)
+    *   [What happens if I lose access to my key/laptop?](#what-happens-if-i-lose-access-to-my-keylaptop)
     *   [Is Snippt free?](#is-snippt-free)
-    *   [Who can access my secrets?](#who-can-access-my-secrets)
+    *   [Will there be a self-hosted option available in future?](#will-there-be-a-self-hosted-option-available-in-future)
     *   [Why does it sometimes take longer to fulfill a request?](#why-does-it-sometimes-take-longer-to-fulfill-a-request)
 *   [License](#license)
 
 ## Introduction
 
-<img src="https://www.sniptt.com/img/terminal/vault-example.gif" alt="Vault example" />
+**Sniptt is a developer-friendly secret manager.**
 
-Sniptt is a secret manager for developers.
-
-The main purpose of Sniptt is to simplify and improve the experience of sharing secrets and credentials between developers and machines.
+It simplifies and improves the experience of sharing end-to-end encrypted secrets such as API keys, database passwords, and other credentials between engineers.
 
 You can finally say goodbye to 1Password, LastPass, and Dashlane 👋.
+
+Read more in our introductory post on [Sharing secrets with teams](https://sniptt.medium.com/sharing-secrets-with-teams-82fde5b11149).
+
+<img src="https://www.sniptt.com/img/terminal/vault-example.gif" alt="Vault example" />
 
 ## Install
 
@@ -165,7 +171,48 @@ $ snip share --file .env.local
 
 For advanced usage, type `$ snip share -h`.
 
+## Useful reading
+
+Our [engineering blog](https://sniptt.medium.com/) is now live!
+
+*   Introductory post on [Sharing secrets with teams](https://sniptt.medium.com/sharing-secrets-with-teams-82fde5b11149)
+*   [Building a Node.js CLI with TypeScript, packaged and distributed via Homebrew](https://medium.com/geekculture/building-a-node-js-cli-with-typescript-packaged-and-distributed-via-homebrew-15ba2fadcb81)
+
 ## FAQ
+
+### Why should I trust you with my secrets?
+
+All secrets are **end-to-end encrypted**, which means the plaintext values **never leave your device**. We do *not* log, track, or store the master passphrase that protects your account master keys.
+
+A [key derivation function](./src/services/crypto/deriveEncryptionKey.ts) is used to ensure the password used to encrypt the master account private key is always of constant length, is salted, and would be difficult to break computationally, although there is currently no validation on the strength of the master password chosen (except that the length must be at least 12 characters). This is something we are working to improve.
+
+The computed password can optionally be stored in an OS keychain service such as macOS Keychain. We use [Keytar](https://github.com/atom/node-keytar) to faciliate the integration with native OS keychains.
+
+The password salt is currently stored in the ledger on our server, but we are looking at ways to improve the entire security model of generating and storing the account master key(s).
+
+Lastly, our client code is fully open source. You can see exactly what it does and you can also see how the binaries get built and distributed.
+
+### How does sharing work?
+
+A secret *must* belong to a vault. Each vault has its own keypair, where the private key is encrypted with the public keys of the members of the vault. The roles of the members (Read, Admin, Owner) are stored in the ledger and are used to control access to both the vault and the secrets within it.
+
+For example, a Read role can only view secrets in a vault, an Admin role can add secrets to a vault, and an Owner role can additionally manage members of a vault.
+
+### What data do you store on your backend?
+
+We store the account email, account name, account and vault public keys and encrypted private keys. We store the private keys encrypted as PGP messages to allow for secure sharing. In theory, the mechanics of vaults and sharing secrets mimics how a Signal group chat works - allowing multiple members of a group to read end-to-end encrypted messages.
+
+All secrets are stored encrypted as PGP messages.
+
+You can take a look at the source code to see for yourself which details are being sent to our backend service.
+
+### What happens if I lose access to my key/laptop?
+
+**IMPORTANT:** Make sure to note down your master passphrase and store it somewhere secure.
+
+To register a new device, run `snip configure` with your existing account email. Upon confirming your master passphrase you will be able to access your content again.
+
+This is one of the reasons we chose a rather simple approach (PGP, encrypted keys, etc.) at first as we wanted to make sure the barrier to entry is as low as possible before we move onto a more advanced solution.
 
 ### Is Snippt free?
 
@@ -173,15 +220,13 @@ Sniptt is **free** for personal use with the following limits:
 
 *   Up to 100 secrets per month
 *   Up to 100 URL shares per month
-*   1 additional Vault (up to 3 members)
+*   1 additional vault (up to 3 members)
 
 To increase limits and access more features, please email us at <support@sniptt.com>.
 
-### Who can access my secrets?
+### Will there be a self-hosted option available in future?
 
-**You and only you can access your secrets stored privately with Sniptt.** The Master Password used to encrypt your private key **never leaves your device**, ensuring nobody, not even Sniptt has access to your encrypted data. You can even verify the code to make sure! 🕵️‍♂️
-
-If you wish to share your secrets with others, then you will need to create a shared Vault or use the one-time-secret functionality to do so.
+Yes, we are actively working on providing a self-hosted option with licensing.
 
 ### Why does it sometimes take longer to fulfill a request?
 
