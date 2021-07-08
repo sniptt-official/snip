@@ -8,9 +8,7 @@ export const secretAdded = ({
   vaultName: string | undefined;
 }): never => {
   process.stdout.write(`
-✨ ${chalk.cyan(secretName)} added to ${chalk.cyan(
-    vaultName ? vaultName : 'Personal',
-  )} vault!
+✨ ${chalk.cyan(secretName)} updated!
 
 To view:
 

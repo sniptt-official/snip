@@ -54,6 +54,16 @@ The recommended way to install `snip` on macOS is via Homebrew.
 $ brew install sniptt-official/snip/snip
 ```
 
+#### Update
+
+To update to latest version of `snip`, use:
+
+```sh
+brew upgrade sniptt-official/snip/snip
+```
+
+If you're using macOS Keychain to store the master passphrase, you might need to grant `snip` access to the **Sniptt Safe Storage** item by clicking "Always Allow".
+
 ### npm
 
 Alternatively, you can also install `snip` via npm.

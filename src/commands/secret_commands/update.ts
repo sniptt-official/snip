@@ -105,7 +105,7 @@ export const handler: Handler = async (argv) => {
   });
   spinner.succeed();
 
-  spinner.start('Adding secret to vault');
+  spinner.start('Updating secret');
   const { SecretId: secretId } = await api.updateSecret(
     {
       SecretName: secretName,
