@@ -8,6 +8,12 @@
 
 ***
 
+**Looking to share end-to-end encrypted secrets via a one-time URL?**
+
+Check out [ots-cli](https://github.com/sniptt-official/ots-cli) - our zero-configuration, light-weight CLI written in Go and designed specifically for fast and secure sharing of one-time secrets.
+
+***
+
 <div align="center">
   <b>Please note that this project is under active development. APIs might change before version 1 is released.</b>
 </div>
@@ -26,6 +32,7 @@
     *   [Add secrets](#add-secrets)
     *   [Read secrets](#read-secrets)
     *   [Vaults](#vaults)
+    *   [Update secrets](#update-secrets)
     *   [Sharing](#sharing)
 *   [Useful reading](#useful-reading)
 *   [FAQ](#faq)
@@ -106,9 +113,6 @@ For advanced usage, type `$ snip configure -h`.
 Add end-to-end encrypted secrets to your personal vault.
 
 ```sh
-# Add simple key/value.
-$ snip add DB_PASSWORD AYYGR3h64tHp9Bne
-
 # Add simple key/value (you will be prompted using hidden password input).
 $ snip add DB_PASSWORD
 
@@ -158,7 +162,30 @@ $ snip vault ls -q --json | jq -r ".[].VaultId" | pbcopy
 
 For advanced usage, type `$ snip vault -h`.
 
+### Update secrets
+
+Update/rotate end-to-end encrypted secrets.
+
+```sh
+# Update simple key/value (you will be prompted using hidden password input).
+$ snip update DB_PASSWORD
+
+# Update file.
+$ snip update --file .env.prod
+
+# Update file in a shared vault.
+$ snip update -f sandbox.csv -v creds:aws
+```
+
+For advanced usage, type `$ snip update -h`.
+
 ### Sharing
+
+**Looking to share end-to-end encrypted secrets via a one-time URL?**
+
+Check out [ots-cli](https://github.com/sniptt-official/ots-cli) - our zero-configuration, light-weight CLI written in Go and designed specifically for fast and secure sharing of one-time secrets.
+
+***
 
 Share an end-to-end encrypted secret via a one-time URL.
 
