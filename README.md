@@ -10,7 +10,7 @@
 
 **Looking to share end-to-end encrypted secrets via a one-time URL?**
 
-**Check out [ots-cli](https://github.com/sniptt-official/ots-cli)** - our zero-configuration, light-weight CLI written in Go and designed specifically for fast and secure sharing of one-time secrets.
+⚡️ Check out **[ots-cli](https://github.com/sniptt-official/ots-cli)** - our zero-configuration, light-weight CLI written in Go and designed specifically for fast and secure sharing of one-time secrets.
 
 ***
 
