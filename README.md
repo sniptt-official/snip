@@ -1,22 +1,28 @@
-<p align="center" style="text-align:center;">
+<p align="center">
   <a href="https://sniptt.com">
-    <img src="./assets/readme-hero-logo.svg" alt="Sniptt Logo" />
+    <img src=".github/assets/snip-social-cover.svg" alt="Snip Logo" />
   </a>
 </p>
 
-<div align="center">🔐 The secret manager that developers love!</div>
+<p align="right">
+  <i>If you use this repo, star it ✨</i>
+</p>
+
+***
+
+<p align="center">🔐 <b>A simple developer-friendly CLI for managing secrets</b></p>
 
 ***
 
 **Looking to share end-to-end encrypted secrets via a one-time URL?**
 
-⚡️ Check out **[ots-cli](https://github.com/sniptt-official/ots-cli)** - our zero-configuration, light-weight CLI written in Go and designed specifically for fast and secure sharing of one-time secrets.
+⚡️ Check out **[ots](https://github.com/sniptt-official/ots)** - our zero-configuration, light-weight CLI written in Go and designed specifically for fast and secure sharing of one-time secrets.
 
 ***
 
-<div align="center">
+<p align="center">
   <b>Please note that this project is under active development. APIs might change before version 1 is released.</b>
-</div>
+</p>
 
 ## Table of Contents
 
@@ -88,7 +94,7 @@ npm install sniptt -g
 
 ### Manual
 
-For manual installation instructions on macOS and Linux, please refer to the dedicated [install docs](./docs/manual-install.md).
+See [Releases](https://github.com/sniptt-official/snip/releases)
 
 ## Features
 
@@ -270,4 +276,4 @@ Our platform is built on AWS, using 100% serverless architecture. We rely heavil
 
 ## License
 
-This project is under the MIT license.
+See [LICENSE](LICENSE)

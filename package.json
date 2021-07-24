@@ -1,7 +1,7 @@
 {
   "name": "sniptt",
   "version": "0.0.50",
-  "description": "The secret manager that developers love!",
+  "description": "A simple developer-friendly CLI for managing secrets",
   "main": "./build/cli.js",
   "bin": {
     "sniptt": "./build/cli.js",
@@ -24,10 +24,10 @@
     "secrets",
     "sharing-secrets"
   ],
-  "author": "sniptt.com <support@sniptt.com> (https://github.com/sniptt-official)",
+  "author": "Sniptt <support@sniptt.com> (sniptt.com)",
   "license": "MIT",
-  "homepage": "https://github.com/sniptt-official/snip-cli",
-  "bugs": "https://github.com/sniptt-official/snip-cli/issues",
+  "homepage": "https://github.com/sniptt-official/snip",
+  "bugs": "https://github.com/sniptt-official/snip/issues",
   "scripts": {
     "test": "ava",
     "test:ci": "nyc ava --fail-fast",
