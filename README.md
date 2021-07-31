@@ -71,7 +71,8 @@ Read more in our introductory post on [Sharing secrets with teams](https://snipt
 The recommended way to install `snip` on macOS is via Homebrew.
 
 ```sh
-$ brew install sniptt-official/snip/snip
+brew tap sniptt-official/tap
+brew install snip
 ```
 
 #### Update
@@ -79,7 +80,7 @@ $ brew install sniptt-official/snip/snip
 To update to latest version of `snip`, use:
 
 ```sh
-brew upgrade sniptt-official/snip/snip
+brew upgrade snip
 ```
 
 If you're using macOS Keychain to store the master passphrase, you might need to grant `snip` access to the **Sniptt Safe Storage** item by clicking "Always Allow".
