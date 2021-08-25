@@ -1,10 +1,1 @@
-*-debug.log
-*-error.log
-/.nyc_output
-/coverage
-/bin
-/dist
-/build
-/lib
-/tmp
-node_modules
+snip
