@@ -1,3 +1,7 @@
+<h2 align="center">
+  <b>🚨 PLEASE READ: https://github.com/sniptt-official/snip/discussions/17</b>
+</h2>
+
 <p align="center">
   <a href="https://sniptt.com">
     <img src=".github/assets/snip-social-cover.svg" alt="Snip Logo" />
@@ -20,9 +24,9 @@
 
 ***
 
-<p align="center">
-  <b>Please note that this project is under active development. APIs might change before version 1 is released.</b>
-</p>
+<h2 align="center">
+  <b>🚨 DISCONTINUATION NOTICE: https://github.com/sniptt-official/snip/discussions/17</b>
+</h2>
 
 ## Table of Contents
 
